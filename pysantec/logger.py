@@ -7,7 +7,7 @@ import sys
 import logging
 import datetime
 import platform
-from importlib.metadata import PackageNotFoundError, version
+from . import __about__
 
 # Ensure log directory exists
 LOG_DIR = "logs"
@@ -35,15 +35,8 @@ if not root_logger.hasHandlers():
         ]
     )
 
-# Get the project version
-__version__ = "unknown"
-try:
-    __version__ = version("pysantec")
-except PackageNotFoundError:
-    pass
-
 # Log the project version
-logging.info(f"Project Version: {__version__}")
+logging.info(f"Project Version: {__about__.__version__}")
 
 def _log_run_info():
     """ Log environment information. """
