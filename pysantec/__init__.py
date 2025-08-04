@@ -8,3 +8,9 @@ from .drivers.dll_manager import setup_dlls
 
 # Initialize and Load the Santec DLLs
 setup_dlls_result = setup_dlls()
+
+from .instruments.instrument_manager import InstrumentManager
+
+__all__ = [
+    "InstrumentManager",
+]
