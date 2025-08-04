@@ -1,5 +1,5 @@
 """
-DLL Manager.
+PySantec DLL Manager.
 
 - Load the Santec DLLs from the default STS application path.
 - Load the Santec DLLs from the user AppData path.
@@ -8,7 +8,10 @@ DLL Manager.
 import os
 import clr
 from pathlib import Path
-from ..config import DEV_MODE
+from ..logger import get_logger
+
+# Get the logger
+logger = get_logger(__name__)
 
 # DLL Paths
 SYSTEM_DLL_PATH = r"C:\\Program Files\\santec\\Swept Test System IL And PDL"
@@ -29,13 +32,11 @@ def setup_dlls():
     """Gets the path where the DLLs exist."""
     if dlls_exist(SYSTEM_DLL_PATH):
         dll_path = SYSTEM_DLL_PATH
-        if DEV_MODE:
-            print(f"Found DLLs in: {dll_path}")
+        logger.debug(f"Found DLLs in: {dll_path}")
 
     elif dlls_exist(APPDATA_DLL_PATH):
         dll_path = APPDATA_DLL_PATH
-        if DEV_MODE:
-            print(f"Found DLLs in AppData: {dll_path}")
+        logger.debug(f"Found DLLs in AppData: {dll_path}")
     else:
         raise RuntimeError("DLLs not found.")
 
@@ -55,17 +56,14 @@ def load_dlls(dll_path, dlls = None):
     for dll in dlls:
         try:
             full_path = os.path.join(dll_path, dll)
-            if DEV_MODE:
-                print(f"Loading DLL: {full_path}")
+            logger.debug(f"Loading DLL: {full_path}")
 
             # Attempt to load the DLL
             clr.AddReference(full_path)
 
-            if DEV_MODE:
-                print(f"DLL Loaded: {dll}")
+            logger.debug(f"DLL Loaded: {dll}")
 
         except Exception as e:
-            if DEV_MODE:
-                print(f"Error loading DLL '{dll}': {e}")
+            logger.debug(f"Error loading DLL '{dll}': {e}")
             return False  # Stop on first failure
     return True  # Only returns True if all DLLs are loaded successfully
