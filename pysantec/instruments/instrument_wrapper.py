@@ -5,7 +5,6 @@ Combines TSL, MPM, DAQ, and PCU functionality into one interface.
 
 from enum import Enum
 from logging import Logger
-from dataclasses import dataclass
 
 # Importing from Santec namespace
 from Santec import TSL, MPM, SPU, ExceptionCode, CommunicationTerminator
@@ -43,30 +42,6 @@ class ConnectionType(Enum):
     TCPIP = CommunicationMethod.TCPIP
     DEV = "DAQ"
     NULL = "Unknown"
-# endregion
-
-# region Data classes
-@dataclass
-class _ConnectionField:
-    terminator: Terminator
-    # region GPIB Fields
-    gpib_board: MainCommunication.GPIBBoard
-    gpib_address: MainCommunication.GPIBAddress
-    gpib_connect_type: GPIBType
-    # endregion
-    # region USB Fields
-    usb_device_id: MainCommunication.DeviceID
-    ft_wait_time: MainCommunication.FT_Waittime
-    # endregion
-    # region DAQ Fields
-    daq_device_name: str
-    # endregion
-    # region LAN Fields
-    ip_address: MainCommunication.IPAddress
-    port_number: MainCommunication.Port
-    wait_time: MainCommunication.Waittime
-    read_buffer_size: MainCommunication.ReadBufferSize
-    # endregion
 # endregion
 
 class InstrumentWrapper:

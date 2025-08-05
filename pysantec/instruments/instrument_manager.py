@@ -3,7 +3,6 @@ Instrument Manager module.
 """
 
 from typing import Dict
-
 from ..logger import get_logger
 from .tsl_instrument import TSLInstrument
 from .mpm_instrument import MPMInstrument
@@ -14,7 +13,6 @@ from .instrument_wrapper import InstrumentWrapper, ConnectionType, GPIBType, Ter
 
 class InstrumentManager:
     """Main instrument manager for device detection and connection"""
-
     def __init__(self):
         self._resources = []
         self.logger = get_logger(self.__class__.__name__)
@@ -24,20 +22,7 @@ class InstrumentManager:
 
         self._list_resources()
 
-    def list_resources(self) -> list:
-        """
-        List all available devices.
-
-        :return: List of GPIB, FTDI USB & NI DAQ resources.
-        """
-        resources = self._resources
-        if len(resources) < 1:
-            self.logger.debug(f"No resources available: {len(resources)}")
-            return []
-
-        self.logger.info(f"Found {len(resources)} resources")
-        return resources
-
+    # region Private methods
     def _list_resources(self):
         try:
             self._list_gpib_resources()
@@ -84,15 +69,6 @@ class InstrumentManager:
         except Exception as e:
             self.logger.error(f"Error listing Serial Port resources: {e}")
 
-    def connect_tsl(self, resource_name: str):
-        return self._connect(resource_name, InstrumentType.TSL)
-
-    def connect_mpm(self, resource_name: str):
-        return self._connect(resource_name, InstrumentType.MPM)
-
-    def connect_daq(self, device_name: str) -> DAQInstrument:
-        return self._connect(device_name, InstrumentType.DAQ)
-
     def _connect(self, resource_name, instrument_type):
         connection_type = None
         if resource_name in self._connected_instruments.keys():
@@ -109,14 +85,19 @@ class InstrumentManager:
         if not connection_type:
             connection_type = self._get_connection_type(resource_name)
 
-        self._establish(resource_name, instrument_type, connection_type)
+        self._establish_connection(resource_name, instrument_type, connection_type)
         if not self._instrument:
             raise Exception(f"Failed to connect: {resource_name}")
         self._connected_instruments[resource_name] = self._instrument
         return self._instrument
 
-    def _establish(self, resource_name: str, instrument_type: InstrumentType, connection_type: ConnectionType):
+    def _establish_connection(self,
+                              resource_name: str,
+                              instrument_type: InstrumentType,
+                              connection_type: ConnectionType
+                              ):
         terminator = Terminator.CRLF
+
         match instrument_type:
             case InstrumentType.TSL:
                 self._instrument = TSLInstrument()
@@ -130,9 +111,6 @@ class InstrumentManager:
         if not self._instrument:
             raise Exception(f"Invalid instrument type: {instrument_type}")
 
-        self._connection(connection_type, resource_name, terminator)
-
-    def _connection(self, connection_type, resource_name, terminator):
         match connection_type:
             case ConnectionType.GPIB:
                 self._gpib_connection(resource_name, terminator)
@@ -172,3 +150,27 @@ class InstrumentManager:
         elif "DEV" in resource_name:
             return ConnectionType.DEV
         return ConnectionType.NULL
+    # endregion
+
+    def list_resources(self) -> list:
+        """
+        List all available devices.
+
+        :return: List of GPIB, FTDI USB & NI DAQ resources.
+        """
+        resources = self._resources
+        if len(resources) < 1:
+            self.logger.debug(f"No resources available: {len(resources)}")
+            return []
+
+        self.logger.info(f"Found {len(resources)} resources")
+        return resources
+
+    def connect_tsl(self, resource_name: str):
+        return self._connect(resource_name, InstrumentType.TSL)
+
+    def connect_mpm(self, resource_name: str):
+        return self._connect(resource_name, InstrumentType.MPM)
+
+    def connect_daq(self, device_name: str) -> DAQInstrument:
+        return self._connect(device_name, InstrumentType.DAQ)
