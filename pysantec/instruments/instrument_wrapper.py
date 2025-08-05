@@ -3,24 +3,71 @@ Unified wrapper for the Santec instrument DLL.
 Combines TSL, MPM, DAQ, and PCU functionality into one interface.
 """
 
+from enum import Enum
 from logging import Logger
 from dataclasses import dataclass
 
 # Importing from Santec namespace
-from Santec import TSL, MPM, SPU, PCU, ExceptionCode, CommunicationTerminator
+from Santec import TSL, MPM, SPU, ExceptionCode, CommunicationTerminator
 from Santec.Communication import MainCommunication, CommunicationMethod, GPIBConnectType
 
 
-@dataclass
-class ConnectionField:
-    gpib_board: str
-    gpib_address: str
-    gpib_connect_type: GPIBConnectType
-    usb_device_id: int
-    ip_address: str
-    port_number: str
-    daq_device_name: str
+# region Instrument Class Wrapper
+class WrapperClass:
+    pass
 
+class TSLWrapper(TSL):
+    pass
+
+class MPMWrapper(MPM):
+    pass
+
+class DAQWrapper(SPU):
+    pass
+# endregion
+
+# region Communication Enums
+class Terminator(Enum):
+    CR = CommunicationTerminator.Cr
+    LF = CommunicationTerminator.Lf
+    CRLF = CommunicationTerminator.CrLf
+
+class GPIBType(Enum):
+    NIVisa = GPIBConnectType.NIVisa
+    NI4882 = GPIBConnectType.NI4882
+    KeysightVisa = GPIBConnectType.KeysightIO
+
+class ConnectionType(Enum):
+    USB = CommunicationMethod.USB
+    GPIB = CommunicationMethod.GPIB
+    TCPIP = CommunicationMethod.TCPIP
+    DEV = "DAQ"
+    NULL = "Unknown"
+# endregion
+
+# region Data classes
+@dataclass
+class _ConnectionField:
+    terminator: Terminator
+    # region GPIB Fields
+    gpib_board: MainCommunication.GPIBBoard
+    gpib_address: MainCommunication.GPIBAddress
+    gpib_connect_type: GPIBType
+    # endregion
+    # region USB Fields
+    usb_device_id: MainCommunication.DeviceID
+    ft_wait_time: MainCommunication.FT_Waittime
+    # endregion
+    # region DAQ Fields
+    daq_device_name: str
+    # endregion
+    # region LAN Fields
+    ip_address: MainCommunication.IPAddress
+    port_number: MainCommunication.Port
+    wait_time: MainCommunication.Waittime
+    read_buffer_size: MainCommunication.ReadBufferSize
+    # endregion
+# endregion
 
 class InstrumentWrapper:
     def __init__(self, logger: Logger):
@@ -53,4 +100,25 @@ class InstrumentWrapper:
         if error_code != 0:
             self.logger.error("Error while getting DAQ devices.")
         return devices
+
+    @staticmethod
+    def connect_gpib(instrument_instance, gpib_board: int, gpib_address: int,
+                     gpib_connect_type: GPIBType, connection_type: ConnectionType, terminator: Terminator):
+        instrument = instrument_instance.instrument(InstrumentWrapper)
+        if not instrument:
+            raise Exception("Could not create instrument instance.")
+        instrument.GPIBBoard = gpib_board
+        instrument.GPIBAddress = gpib_address
+        instrument.GPIBConnectType = gpib_connect_type.value
+        instrument.Terminator = terminator.value
+        instrument.Connect(connection_type.value)
+
+    @staticmethod
+    def connect_daq(instrument_instance, device_name: str):
+        instrument = instrument_instance.instrument(InstrumentWrapper)
+        if not instrument:
+            raise Exception("Could not create instrument instance.")
+        instrument.DeviceName = device_name
+        instrument.Connect("")
+
 
