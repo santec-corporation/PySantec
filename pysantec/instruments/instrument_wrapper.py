@@ -78,24 +78,59 @@ class InstrumentWrapper:
             self.logger.error("Error while getting DAQ devices.")
         return devices
 
-    @staticmethod
-    def connect_gpib(instrument_instance, gpib_board: int, gpib_address: int,
-                     gpib_connect_type: GPIBType, connection_type: ConnectionType, terminator: Terminator):
+    def connect_gpib(self, instrument_instance, gpib_board: int, gpib_address: int,
+                     gpib_connect_type: GPIBType, terminator: Terminator):
+
         instrument = instrument_instance.instrument(InstrumentWrapper)
         if not instrument:
             raise Exception("Could not create instrument instance.")
+
         instrument.GPIBBoard = gpib_board
         instrument.GPIBAddress = gpib_address
         instrument.GPIBConnectType = gpib_connect_type.value
         instrument.Terminator = terminator.value
-        instrument.Connect(connection_type.value)
 
-    @staticmethod
-    def connect_daq(instrument_instance, device_name: str):
+        try:
+            error_code = instrument.Connect(ConnectionType.GPIB.value)
+            if error_code != 0:
+                self.logger.error(f"Error while establishing GPIB connection with GPIB{gpib_board}::{gpib_address}.")
+
+        except Exception as e:
+            raise RuntimeError(f"Error while establishing GPIB connection with GPIB{gpib_board}::{gpib_address}: {e}")
+
+    def connect_tcpip(self, instrument_instance, ip_address: str, port_number: int, terminator: Terminator):
+
         instrument = instrument_instance.instrument(InstrumentWrapper)
         if not instrument:
             raise Exception("Could not create instrument instance.")
+
+        instrument.IPAddress = ip_address
+        instrument.Port = port_number
+        instrument.TimeOut = 5000
+        # instrument.Terminator = terminator.value
+
+        try:
+            error_code = instrument.Connect(ConnectionType.TCPIP.value)
+            if error_code != 0:
+                self.logger.error(f"Error while establishing LAN connection with {ip_address}::{port_number}.")
+
+        except Exception as e:
+            raise RuntimeError(f"Error while establishing LAN connection with {ip_address}::{port_number}: {e}")
+
+    def connect_daq(self, instrument_instance, device_name: str):
+
+        instrument = instrument_instance.instrument(InstrumentWrapper)
+        if not instrument:
+            raise Exception("Could not create instrument instance.")
+
         instrument.DeviceName = device_name
-        instrument.Connect("")
+
+        try:
+            error_code = instrument.Connect("")
+            if error_code != 0:
+                self.logger.error(f"Error while establishing DAQ connection with {device_name}.")
+
+        except Exception as e:
+            raise RuntimeError(f"Error while establishing DAQ connection with {device_name}: {e}")
 
 

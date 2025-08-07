@@ -73,11 +73,14 @@ class InstrumentManager:
         connection_type = None
         if resource_name in self._connected_instruments.keys():
             raise Exception(f"Resource {resource_name} already connected.")
+
         if "TCPIP" in resource_name.upper():
             connection_type = ConnectionType.TCPIP
-            self._resources.extend(resource_name)
+            self._resources.append(resource_name)
+
         if len(self._resources) < 1:
             raise Exception(f"No resources available: {len(self._resources)}")
+
         if resource_name not in self._resources:
             self.logger.error(f"Try to connect invalid resource: {resource_name}")
             raise Exception(f"Invalid resource: {resource_name}")
@@ -88,7 +91,9 @@ class InstrumentManager:
         self._establish_connection(resource_name, connection_type, terminator)
         if not self._instrument:
             raise Exception(f"Failed to connect: {resource_name}")
+
         self._connected_instruments[resource_name] = self._instrument
+
         return self._instrument
 
     def _establish_connection(self,
@@ -102,7 +107,7 @@ class InstrumentManager:
             case ConnectionType.USB:
                 self._usb_connection(resource_name)
             case ConnectionType.TCPIP:
-                self._tcpip_connection(resource_name)
+                self._tcpip_connection(resource_name, terminator)
             case ConnectionType.DEV:
                 self._dev_connection(resource_name)
             case ConnectionType.NULL:
@@ -111,16 +116,16 @@ class InstrumentManager:
     def _gpib_connection(self, resource_name, terminator):
         gpib_board, gpib_address, _ = resource_name.split('::')   # GPIB0::10::INSTR
         gpib_board = gpib_board[-1]
-        self._instrument_wrapper.connect_gpib(self._instrument, int(gpib_board), int(gpib_address), GPIBType.NI4882,
-                                              ConnectionType.GPIB, terminator)
+        self._instrument_wrapper.connect_gpib(self._instrument, int(gpib_board), int(gpib_address),
+                                              GPIBType.NI4882, terminator)
 
     def _usb_connection(self, resource_name):
         usb_device_id = 1  # TODO: Refactor the usb device ID assignment
         raise NotImplementedError("USB connection is yet to be implemented.")
 
-    def _tcpip_connection(self, resource_name):
+    def _tcpip_connection(self, resource_name, terminator):
         _, ip_address, port_number, _ = resource_name.split('::')     # TCPIP0::192.168.10.101::5000::SOCKET
-        raise NotImplementedError("TCPIP connection is yet to be implemented.")
+        self._instrument_wrapper.connect_tcpip(self._instrument, str(ip_address), int(port_number), terminator)
 
     def _dev_connection(self, resource_name):
         self._instrument_wrapper.connect_daq(self._instrument, resource_name)
