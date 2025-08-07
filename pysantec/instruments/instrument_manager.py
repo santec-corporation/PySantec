@@ -17,8 +17,8 @@ class InstrumentManager:
         self._resources = []
         self.logger = get_logger(self.__class__.__name__)
         self._instrument_wrapper = InstrumentWrapper(self.logger)
-        self._instrument: BaseInstrument | DAQInstrument | None = None
-        self._connected_instruments: Dict[str, BaseInstrument | DAQInstrument] = {}
+        self._instrument: BaseInstrument | None = None
+        self._connected_instruments: Dict[str, BaseInstrument] = {}
 
         self._list_resources()
 
@@ -128,7 +128,7 @@ class InstrumentManager:
         self._instrument_wrapper.connect_tcpip(self._instrument, str(ip_address), int(port_number), terminator)
 
     def _dev_connection(self, resource_name):
-        self._instrument_wrapper.connect_daq(self._instrument, resource_name)
+        self._instrument_wrapper.connect_daq(self._instrument, resource_name)       # Dev1
 
     @staticmethod
     def _get_connection_type(resource_name):
@@ -166,6 +166,6 @@ class InstrumentManager:
         self._instrument = MPMInstrument()
         return self._connect(resource_name, terminator)
 
-    def connect_daq(self, device_name: str) -> DAQInstrument:
+    def connect_daq(self, device_name: str) -> DAQInstrument | BaseInstrument:
         self._instrument = DAQInstrument()
         return self._connect(device_name)

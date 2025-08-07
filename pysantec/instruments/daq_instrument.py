@@ -2,10 +2,11 @@
 DAQ instrument module.
 """
 
+from .base_instrument import BaseInstrument
 from .instrument_wrapper import DAQWrapper, InstrumentWrapper
 
 
-class DAQInstrument:
+class DAQInstrument(BaseInstrument):
     def __init__(self):
         super().__init__()
         self._instrument = DAQWrapper()
@@ -18,3 +19,7 @@ class DAQInstrument:
     @property
     def device_name(self):
         return self._instrument.DeviceName
+
+    @property
+    def is_sampling(self):
+        return self._instrument.IsSampling
