@@ -69,7 +69,7 @@ class InstrumentManager:
         except Exception as e:
             self.logger.error(f"Error listing Serial Port resources: {e}")
 
-    def _connect(self, resource_name, instrument_type):
+    def _connect(self, resource_name, terminator: Terminator = Terminator.CRLF):
         connection_type = None
         if resource_name in self._connected_instruments.keys():
             raise Exception(f"Resource {resource_name} already connected.")
@@ -85,7 +85,7 @@ class InstrumentManager:
         if not connection_type:
             connection_type = self._get_connection_type(resource_name)
 
-        self._establish_connection(resource_name, instrument_type, connection_type)
+        self._establish_connection(resource_name, connection_type, terminator)
         if not self._instrument:
             raise Exception(f"Failed to connect: {resource_name}")
         self._connected_instruments[resource_name] = self._instrument
@@ -93,24 +93,9 @@ class InstrumentManager:
 
     def _establish_connection(self,
                               resource_name: str,
-                              instrument_type: InstrumentType,
-                              connection_type: ConnectionType
+                              connection_type: ConnectionType,
+                              terminator: Terminator
                               ):
-        terminator = Terminator.CRLF
-
-        match instrument_type:
-            case InstrumentType.TSL:
-                self._instrument = TSLInstrument()
-                terminator = Terminator.CR
-            case InstrumentType.MPM:
-                self._instrument = MPMInstrument()
-                terminator = Terminator.LF
-            case InstrumentType.DAQ:
-                self._instrument = DAQInstrument()
-
-        if not self._instrument:
-            raise Exception(f"Invalid instrument type: {instrument_type}")
-
         match connection_type:
             case ConnectionType.GPIB:
                 self._gpib_connection(resource_name, terminator)
@@ -166,11 +151,16 @@ class InstrumentManager:
         self.logger.info(f"Found {len(resources)} resources")
         return resources
 
-    def connect_tsl(self, resource_name: str):
-        return self._connect(resource_name, InstrumentType.TSL)
+    def connect_tsl(self, resource_name: str) -> TSLInstrument | BaseInstrument:
+        terminator = Terminator.CR
+        self._instrument = TSLInstrument()
+        return self._connect(resource_name, terminator)
 
-    def connect_mpm(self, resource_name: str):
-        return self._connect(resource_name, InstrumentType.MPM)
+    def connect_mpm(self, resource_name: str) -> MPMInstrument | BaseInstrument:
+        terminator = Terminator.LF
+        self._instrument = MPMInstrument()
+        return self._connect(resource_name, terminator)
 
     def connect_daq(self, device_name: str) -> DAQInstrument:
-        return self._connect(device_name, InstrumentType.DAQ)
+        self._instrument = DAQInstrument()
+        return self._connect(device_name)
