@@ -7,7 +7,7 @@ from ..logger import get_logger
 from .tsl_instrument import TSLInstrument
 from .mpm_instrument import MPMInstrument
 from .daq_instrument import DAQInstrument
-from .base_instrument import BaseInstrument, InstrumentType
+from .base_instrument import BaseInstrument
 from .instrument_wrapper import InstrumentWrapper, ConnectionType, GPIBType, Terminator
 
 

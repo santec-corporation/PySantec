@@ -4,14 +4,7 @@ Base instrument module.
 
 import inspect
 from abc import ABC
-from enum import Enum
 from .instrument_wrapper import WrapperClass, InstrumentWrapper, TSLWrapper, MPMWrapper
-
-
-class InstrumentType(Enum):
-    TSL = 0
-    MPM = 1
-    DAQ = 2
 
 
 class BaseInstrument(ABC, WrapperClass):
