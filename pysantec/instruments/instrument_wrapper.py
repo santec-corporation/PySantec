@@ -25,6 +25,7 @@ class DAQWrapper(SPU):
     pass
 # endregion
 
+
 # region Communication Enums
 class Terminator(Enum):
     CR = CommunicationTerminator.Cr
@@ -43,6 +44,7 @@ class ConnectionType(Enum):
     DEV = "DAQ"
     NULL = "Unknown"
 # endregion
+
 
 class InstrumentWrapper:
     def __init__(self, logger: Logger):
