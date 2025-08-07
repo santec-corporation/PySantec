@@ -6,6 +6,7 @@ from enum import Enum
 from .instrument_wrapper import TSLWrapper
 from .base_instrument import BaseInstrument
 
+
 # region TSL Enums
 class LDStatus(Enum):
     OFF = TSLWrapper.LD_Status.LD_OFF
