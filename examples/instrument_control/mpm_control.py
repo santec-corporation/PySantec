@@ -10,6 +10,9 @@ MPM instrument control example.
 # Import pysantec package
 import pysantec
 
+# Import the MPM enums
+from pysantec.instruments import mpm_enums
+
 
 if __name__ == '__main__':
     # Create an instance of the Instrument manager class
@@ -29,4 +32,10 @@ if __name__ == '__main__':
 
     # Gets the wavelength of the MPM
     print(mpm.get_wavelength())
+
+    # Sets the measurement mode of the MPM
+    mpm.set_measurement_mode(mpm_enums.MeasurementMode.FREERUN)
+
+    # Gets the measurement mode of the MPM
+    print(mpm.get_measurement_mode())
 
