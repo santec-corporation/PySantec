@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # Create an instance of the Instrument manager class
     instrument_manager = pysantec.InstrumentManager()
 
-    # Call the instrument respective connect by passing the resource names/addresses
+    # Connect to the instrument by passing the respective resource names/addresses
     tsl = instrument_manager.connect_tsl('GPIB1::3::INSTR')
     mpm = instrument_manager.connect_mpm('GPIB1::17::INSTR')
     daq = instrument_manager.connect_daq('Dev1')    # Pass the DAQ device name

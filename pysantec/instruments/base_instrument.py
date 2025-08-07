@@ -49,3 +49,24 @@ class BaseInstrument(ABC, WrapperClass):
     def idn(self):
         _, idn = self.query('*IDN?')
         return idn
+
+    def _get_function(self, function_name, response_type = None):
+        response = None
+        if isinstance(response_type, type):
+            response = response_type()
+        _, response = getattr(self._instrument, function_name)(response)
+        return response
+
+    def _set_function(self, function_name, value):
+        _ = getattr(self._instrument, function_name)(value)
+
+    def _get_function_enum(self, function_name, function_enum_name):
+        enum_value = function_enum_name.value
+        _, enum_value = getattr(self._instrument, function_name)(enum_value)
+        return function_enum_name.__class__[enum_value.ToString()]
+
+    def _set_function_enum(self, function_name, function_enum_name):
+        _ = getattr(self._instrument, function_name)(function_enum_name.value)
+
+    def disconnect(self):
+        _ = self._instrument.DicConnect()
