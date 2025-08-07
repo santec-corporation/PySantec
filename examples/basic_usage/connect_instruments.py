@@ -24,6 +24,6 @@ if __name__ == '__main__':
     # Prints the instrument Identification
     print(tsl.idn)
     print(mpm.idn)
-    print(daq.device_name)      # Prints the DAQ device name
+    print(daq.idn)      # Prints the DAQ device name
 
 

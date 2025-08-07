@@ -8,7 +8,8 @@ from .tsl_instrument import TSLInstrument
 from .mpm_instrument import MPMInstrument
 from .daq_instrument import DAQInstrument
 from .base_instrument import BaseInstrument
-from .instrument_wrapper import InstrumentWrapper, ConnectionType, GPIBType, Terminator
+from .wrapper import InstrumentWrapper
+from .wrapper.enumerations.connection_enums import ConnectionType, GPIBType, Terminator
 
 
 class InstrumentManager:

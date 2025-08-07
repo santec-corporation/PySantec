@@ -1,56 +1,18 @@
 """
-Unified wrapper for the Santec instrument DLL.
-Combines TSL, MPM, DAQ, and PCU functionality into one interface.
+Unified wrapper for the Santec Instrument DLL.
 """
 
-from enum import Enum
 from logging import Logger
-
-# Importing from Santec namespace
-from Santec import TSL, MPM, SPU, ExceptionCode, CommunicationTerminator
-from Santec.Communication import MainCommunication, CommunicationMethod, GPIBConnectType
-
-
-# region Instrument Class Wrapper
-class WrapperClass:
-    pass
-
-class TSLWrapper(TSL):
-    pass
-
-class MPMWrapper(MPM):
-    pass
-
-class DAQWrapper(SPU):
-    pass
-# endregion
-
-
-# region Communication Enums
-class Terminator(Enum):
-    CR = CommunicationTerminator.Cr
-    LF = CommunicationTerminator.Lf
-    CRLF = CommunicationTerminator.CrLf
-
-class GPIBType(Enum):
-    NIVisa = GPIBConnectType.NIVisa
-    NI4882 = GPIBConnectType.NI4882
-    KeysightVisa = GPIBConnectType.KeysightIO
-
-class ConnectionType(Enum):
-    USB = CommunicationMethod.USB
-    GPIB = CommunicationMethod.GPIB
-    TCPIP = CommunicationMethod.TCPIP
-    DEV = "DAQ"
-    NULL = "Unknown"
-# endregion
+from .santec_wrapper import DAQ
+from .santec_communication_wrapper import MainCommunication
+from .enumerations.connection_enums import ConnectionType, Terminator, GPIBType
 
 
 class InstrumentWrapper:
     def __init__(self, logger: Logger):
         self.logger = logger.manager.getLogger(__class__.__name__)
         self._main_comm = MainCommunication()
-        self._spu = SPU()
+        self._spu = DAQ()
 
     def get_usb_resources(self):
         resources = list(self._main_comm.Get_USB_Resouce())
@@ -107,7 +69,7 @@ class InstrumentWrapper:
         instrument.IPAddress = ip_address
         instrument.Port = port_number
         instrument.TimeOut = 5000
-        # instrument.Terminator = terminator.value
+        instrument.Terminator = terminator.value
 
         try:
             error_code = instrument.Connect(ConnectionType.TCPIP.value)

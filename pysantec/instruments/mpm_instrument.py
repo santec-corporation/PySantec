@@ -2,39 +2,15 @@
 MPM instrument module.
 """
 
-from enum import Enum
-from .instrument_wrapper import MPMWrapper
+from .wrapper import MPM
 from .base_instrument import BaseInstrument
-
-
-# region MPM Enums
-class RangeMode(Enum):
-    MANUAL = MPMWrapper.READ_Range_Mode.Manual
-    AUTO = MPMWrapper.READ_Range_Mode.Auto
-
-class PowerUnit(Enum):
-    dBm = MPMWrapper.Power_Unit.dBm
-    mW = MPMWrapper.Power_Unit.mW
-    dBmA = MPMWrapper.Power_Unit.dBmA
-    mA = MPMWrapper.Power_Unit.mA
-
-class MeasurementMode(Enum):
-    CONST1 = MPMWrapper.Measurement_Mode.ManualRangeConstant
-    CONST2 = MPMWrapper.Measurement_Mode.AutoRangeConstant
-    SWEEP1 = MPMWrapper.Measurement_Mode.ManualRangeSweep
-    SWEEP2 = MPMWrapper.Measurement_Mode.AutoRangeSweep
-    FREERUN = MPMWrapper.Measurement_Mode.Freerun
-
-class TriggerInputMode(Enum):
-    INTERNAL = MPMWrapper.Trigger_Input_Mode.Internal
-    EXTERNAL = MPMWrapper.Trigger_Input_Mode.Extarnal
-# endregion
+from .wrapper.enumerations.mpm_enums import RangeMode, PowerUnit, MeasurementMode
 
 
 class MPMInstrument(BaseInstrument):
     def __init__(self):
         super().__init__()
-        self._instrument = MPMWrapper()
+        self._instrument = MPM()
 
     # region Get Methods
     def get_range_mode(self):

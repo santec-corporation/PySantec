@@ -2,57 +2,15 @@
 TSL instrument module.
 """
 
-from enum import Enum
-from .instrument_wrapper import TSLWrapper
+from .wrapper import TSL
 from .base_instrument import BaseInstrument
-
-
-# region TSL Enums
-class LDStatus(Enum):
-    OFF = TSLWrapper.LD_Status.LD_OFF
-    ON = TSLWrapper.LD_Status.LD_ON
-
-class ShutterStatus(Enum):
-    OPEN = TSLWrapper.Shutter_Status.Shutter_Open
-    CLOSE = TSLWrapper.Shutter_Status.Shutter_Close
-
-class SweepMode(Enum):
-    STEPPED_ONE_WAY = TSLWrapper.Sweep_Mode.Step_Oneway
-    CONTINUOUS_ONE_WAY = TSLWrapper.Sweep_Mode.Continuous_Oneway
-    STEPPED_TWO_WAY = TSLWrapper.Sweep_Mode.Step_Twoway
-    CONTINUOUS_TWO_WAY = TSLWrapper.Sweep_Mode.Continuous_Twoway
-
-class SweepStatus(Enum):
-    STANDBY = TSLWrapper.Sweep_Status.Standby
-    RUNNING = TSLWrapper.Sweep_Status.Running
-    PAUSE = TSLWrapper.Sweep_Status.Pausing
-    STANDING_BY_TRIGGER = TSLWrapper.Sweep_Status.WaitingforTrigger
-    PREPARATION_FOR_SWEEP_START = TSLWrapper.Sweep_Status.Returning
-
-class TriggerOutputMode(Enum):
-    NONE = getattr(TSLWrapper.Trigger_Output_Mode, 'None')
-    STOP = TSLWrapper.Trigger_Output_Mode.Stop
-    START = TSLWrapper.Trigger_Output_Mode.Start
-    STEP = TSLWrapper.Trigger_Output_Mode.Step
-
-class TriggerInputMode(Enum):
-    DISABLE = TSLWrapper.Trigger_Input_Mode.Disable
-    ENABLE = TSLWrapper.Trigger_Input_Mode.Enable
-
-class Sweep_Start_Mode(Enum):
-    NORMAL = TSLWrapper.Sweep_Start_Mode.Normal
-    WAITING_FOR_TRIGGER = TSLWrapper.Sweep_Start_Mode.WaitingforTrigger
-
-class PowerUnit(Enum):
-    dBm = TSLWrapper.Power_Unit.dBm
-    mW = TSLWrapper.Power_Unit.mW
-# endregion
+from .wrapper.enumerations.tsl_enums import PowerUnit, LDStatus
 
 
 class TSLInstrument(BaseInstrument):
     def __init__(self):
         super().__init__()
-        self._instrument = TSLWrapper()
+        self._instrument = TSL()
 
     # region Private methods
     def _set_power_unit(self):

@@ -3,11 +3,10 @@ Base instrument module.
 """
 
 import inspect
-from abc import ABC
-from .instrument_wrapper import WrapperClass, InstrumentWrapper, TSLWrapper, MPMWrapper
+from .wrapper import InstrumentWrapper, TSL, MPM
 
 
-class BaseInstrument(ABC, WrapperClass):
+class BaseInstrument:
     def __init__(self):
         self._instrument = None
 
@@ -17,7 +16,7 @@ class BaseInstrument(ABC, WrapperClass):
         return self._instrument
 
     def _check_restricted_method(self):
-        if not isinstance(self._instrument, (TSLWrapper, MPMWrapper)):
+        if not isinstance(self._instrument, (TSL, MPM)):
             stack = inspect.stack()
             caller_frame = stack[1].function
             raise PermissionError(
@@ -69,7 +68,7 @@ class BaseInstrument(ABC, WrapperClass):
         self._check_restricted_method()
         enum_value = function_enum_name.value
         _, enum_value = getattr(self._instrument, function_name)(enum_value)
-        return function_enum_name.__class__[enum_value.ToString()]
+        return function_enum_name.__class__(enum_value)
 
     def _set_function_enum(self, function_name, function_enum_name):
         self._check_restricted_method()
