@@ -17,7 +17,7 @@ class DAQInstrument(BaseInstrument):
         return self._instrument
 
     @property
-    def device_name(self):
+    def idn(self):
         return self._instrument.DeviceName
 
     @property

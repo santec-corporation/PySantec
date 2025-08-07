@@ -52,7 +52,6 @@ class BaseInstrument(ABC, WrapperClass):
 
     @property
     def idn(self):
-        self._check_restricted_method()
         _, idn = self.query('*IDN?')
         return idn
 

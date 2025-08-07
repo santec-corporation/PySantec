@@ -19,7 +19,7 @@ if __name__ == '__main__':
     daq = instrument_manager.connect_daq('Dev1')
 
     # Prints the instrument Device Name
-    print(daq.device_name)
+    print(daq.idn)
 
     # Gets the sampling state of the DAQ
     print(daq.is_sampling)
