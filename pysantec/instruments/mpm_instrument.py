@@ -13,29 +13,23 @@ class MPMInstrument(BaseInstrument):
         self._instrument = MPM()
 
     # region Get Methods
-    def get_range_mode(self):
-        range_mode = self._get_function_enum('Get_READ_Range_Mode', RangeMode.AUTO)
-        return range_mode.name
+    def get_range_mode(self) -> RangeMode:
+        return self._get_function_enum('Get_READ_Range_Mode', RangeMode.AUTO).name
 
-    def get_power_unit(self):
-        power_unit = self._get_function_enum('Get_Unit', PowerUnit.dBm)
-        return power_unit.name
+    def get_power_unit(self) -> PowerUnit:
+        return self._get_function_enum('Get_Unit', PowerUnit.dBm).name
 
-    def get_measurement_mode(self):
-        measurement_mode = self._get_function_enum('Get_Mode', MeasurementMode.FREERUN)
-        return measurement_mode.name
+    def get_measurement_mode(self) -> MeasurementMode:
+        return self._get_function_enum('Get_Mode', MeasurementMode.FREERUN).name
 
-    def get_range_value(self):
-        range_value = self._get_function('Get_Range', int)
-        return range_value
+    def get_range_value(self) -> int:
+        return self._get_function('Get_Range', int)
 
-    def get_averaging_time(self):
-        averaging_time = self._get_function('Get_Averaging_Time', float)
-        return averaging_time
+    def get_averaging_time(self) -> float:
+        return self._get_function('Get_Averaging_Time', float)
 
-    def get_wavelength(self):
-        wavelength = self._get_function('Get_Wavelength', float)
-        return wavelength
+    def get_wavelength(self) -> float:
+        return self._get_function('Get_Wavelength', float)
     # endregion
 
     # region Set Methods
