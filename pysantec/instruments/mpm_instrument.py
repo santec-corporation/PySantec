@@ -14,13 +14,13 @@ class MPMInstrument(BaseInstrument):
 
     # region Get Methods
     def get_range_mode(self) -> RangeMode:
-        return self._get_function_enum('Get_READ_Range_Mode', RangeMode.AUTO).name
+        return self._get_function_enum('Get_READ_Range_Mode', RangeMode.AUTO)
 
     def get_power_unit(self) -> PowerUnit:
-        return self._get_function_enum('Get_Unit', PowerUnit.dBm).name
+        return self._get_function_enum('Get_Unit', PowerUnit.dBm)
 
     def get_measurement_mode(self) -> MeasurementMode:
-        return self._get_function_enum('Get_Mode', MeasurementMode.FREERUN).name
+        return self._get_function_enum('Get_Mode', MeasurementMode.FREERUN)
 
     def get_range_value(self) -> int:
         return self._get_function('Get_Range', int)
