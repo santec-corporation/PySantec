@@ -54,15 +54,35 @@ class BaseInstrument:
         _, idn = self.query('*IDN?')
         return idn
 
-    def _get_function(self, function_name, response_type = None):
-        response = None
-        if isinstance(response_type, type):
-            response = response_type()
-        _, response = getattr(self._instrument, function_name)(response)
+    def _get_response(self, function_name, *args):
+        _, response = getattr(self._instrument, function_name)(*args)
         return response
 
-    def _set_function(self, function_name, value):
-        _ = getattr(self._instrument, function_name)(value)
+    def _get_multiple_responses(self, function_name, response_type_1, response_type_2):
+        response_1 = self._init_response(response_type_1)
+        response_2 = self._init_response(response_type_2)
+        _, response_1, response_2 = getattr(self._instrument, function_name)(response_1, response_2)
+        return response_1, response_2
+
+    def _set_and_get_multiple_responses(self, function_name, response_type_1, response_type_2, *args):
+        response_1 = self._init_response(response_type_1)
+        response_2 = self._init_response(response_type_2)
+        _, response_1, response_2 = getattr(self._instrument, function_name)(*args, response_1, response_2)
+        return response_1, response_2
+
+    def _get_function(self, function_name, response_type):
+        response = self._init_response(response_type)
+        return self._get_response(function_name, response)
+
+    def _set_function(self, function_name, *values):
+        getattr(self._instrument, function_name)(*values)
+
+    def _set_and_get_function(self, function_name, *values):
+        return self._get_response(function_name, *values)
+
+    @staticmethod
+    def _init_response(response_type):
+        return response_type() if isinstance(response_type, type) else None
 
     def _get_function_enum(self, function_name, function_enum_name):
         self._check_restricted_method()
