@@ -12,13 +12,10 @@ class TSLInstrument(BaseInstrument):
         super().__init__()
         self._instrument = TSL()
 
-        self._set_power_unit()
+        self._initialize_instrument()
 
-    # region Private methods
-    def _set_power_unit(self):
-        _ = self._instrument.Set_Power_Unit(PowerUnit.dBm.value)
-        self._set_function_enum('Set_Power_Unit', PowerUnit.dBm)
-    # endregion
+    def _initialize_instrument(self):
+        self.set_power_unit(PowerUnit.dBm)
 
     # region Get methods
     def get_system_error(self):
@@ -58,6 +55,9 @@ class TSLInstrument(BaseInstrument):
     # endregion
 
     # region Set methods
+    def set_power_unit(self, unit: PowerUnit):
+        self._set_function_enum('Set_Power_Unit', unit)
+
     def set_ld_status(self, status: LDStatus):
         self._set_function_enum('Set_LD_Status', status)
 
@@ -93,7 +93,7 @@ class TSLInstrument(BaseInstrument):
 
     def wait_for_sweep_status(self, wait_time: float, sweep_status: SweepStatus):
         self._set_function('Waiting_For_Sweep_Status',
-                           wait_time, sweep_status)
+                           wait_time, sweep_status.value)
 
     def pause_scan(self):
         self._set_function('Sweep_Pause')
@@ -102,3 +102,6 @@ class TSLInstrument(BaseInstrument):
         self._set_function('Sweep_Restart')
     # endregion
     # endregion
+
+    def tsl_busy_check(self, wait_time: float):
+        self._set_function('TSL_Busy_Check', wait_time)
