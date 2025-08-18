@@ -44,16 +44,19 @@ def test_idn(tsl):
 @pytest.mark.parametrize("status", [LDStatus.ON, LDStatus.OFF])
 def test_ld_status(tsl, status):
     tsl.set_ld_status(status)
-    time.sleep(0.5)
+    time.sleep(0.2)
     ld_status = tsl.get_ld_status()
     print(f"Set LD Status: {status}, Get: {ld_status}")
     assert ld_status == status
 
 
-def test_get_power_unit(tsl):
+@pytest.mark.parametrize("unit", [PowerUnit.dBm, PowerUnit.mW])
+def test_power_unit(tsl, unit):
+    tsl.set_power_unit(unit)
+    time.sleep(0.2)
     power_unit = tsl.get_power_unit()
-    print(f"Power Unit: {power_unit}")
-    assert power_unit in [PowerUnit.dBm, PowerUnit.mW]
+    print(f"Set Power Unit: {unit}, Get: {power_unit}")
+    assert power_unit == unit
 
 
 def test_get_sweep_status(tsl):
@@ -66,7 +69,7 @@ def test_get_sweep_status(tsl):
 @pytest.mark.parametrize("power", [-5, 0, 2, 5])
 def test_power(tsl, power):
     tsl.set_power(power)
-    time.sleep(0.5)
+    time.sleep(0.2)
     get_power = tsl.get_power()
     print(f"Set Power: {power}, Get: {get_power}")
     assert get_power == power
@@ -75,7 +78,7 @@ def test_power(tsl, power):
 @pytest.mark.parametrize("wavelength", WAVELENGTHS)
 def test_wavelength(tsl, wavelength):
     tsl.set_wavelength(wavelength)
-    time.sleep(0.5)
+    time.sleep(0.2)
     get_wavelength = tsl.get_wavelength()
     print(f"Set Wavelength: {wavelength}, Get: {get_wavelength}")
     assert get_wavelength == wavelength
