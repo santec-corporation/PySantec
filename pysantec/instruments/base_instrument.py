@@ -54,6 +54,18 @@ class BaseInstrument:
         _, idn = self.query('*IDN?')
         return idn
 
+    @property
+    def product_name(self):
+        return self._instrument.Information.ProductName
+
+    @property
+    def serial_number(self):
+        return self._instrument.Information.SerialNumber
+
+    @property
+    def firmware_version(self):
+        return self._instrument.Information.FWversion
+
     def _get_response(self, function_name, *args):
         _, response = getattr(self._instrument, function_name)(*args)
         return response
