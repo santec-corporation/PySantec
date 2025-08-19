@@ -91,7 +91,7 @@ class TSLInstrument(BaseInstrument):
     def soft_trigger(self):
         self._set_function('Set_Software_Trigger')
 
-    def wait_for_sweep_status(self, wait_time: float, sweep_status: SweepStatus):
+    def wait_for_sweep_status(self, wait_time: int, sweep_status: SweepStatus):
         self._set_function('Waiting_For_Sweep_Status',
                            wait_time, sweep_status.value)
 
@@ -103,5 +103,5 @@ class TSLInstrument(BaseInstrument):
     # endregion
     # endregion
 
-    def tsl_busy_check(self, wait_time: float):
+    def tsl_busy_check(self, wait_time: int):
         self._set_function('TSL_Busy_Check', wait_time)
