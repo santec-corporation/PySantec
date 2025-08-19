@@ -17,10 +17,6 @@ class DAQInstrument(BaseInstrument):
         return self._instrument.DeviceName
 
     @property
-    def get_device_id(self):
-        return self._get_function('Get_Device_ID', str)
-
-    @property
     def is_sampling(self):
         return self._instrument.IsSampling
 
@@ -34,39 +30,42 @@ class DAQInstrument(BaseInstrument):
 # endregion
 
 # region Setter & Getter Methods
+    def get_devices(self):
+        return list(self._get_function('Get_Device_ID', None))
+
     # Time Coefficient
     def get_time_coefficient(self):
         return self._instrument.Time_coefficient
 
-    def set_time_coefficient(self, value):
+    def set_time_coefficient(self, value: float):
         self._instrument.Time_coefficient = value
 
     # Averaging Time
     def get_averaging_time(self):
         return self._instrument.AveragingTime
 
-    def set_averaging_time(self, value):
+    def set_averaging_time(self, value: float):
         self._instrument.AveragingTime = value
 
     # F Additional Time
     def get_f_additional_time(self):
         return self._instrument.F_AdditonalTime
 
-    def set_f_additional_time(self, value):
+    def set_f_additional_time(self, value: float):
         self._instrument.F_AdditonalTime = value
 
     # Add Time Coefficient
     def get_add_time_coefficient(self):
         return self._instrument.AddTime_coefficient
 
-    def set_add_time_coefficient(self, value):
+    def set_add_time_coefficient(self, value: float):
         self._instrument.AddTime_coefficient = value
 
     # Measurement Sampling Time
     def get_meas_sampling_time(self):
         return self._instrument.Meas_Sampling_time
 
-    def set_meas_sampling_time(self, value):
+    def set_meas_sampling_time(self, value: float):
         self._instrument.Meas_Sampling_time = value
 # endregion
 
