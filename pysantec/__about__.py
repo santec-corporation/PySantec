@@ -11,11 +11,14 @@ try:
 except PackageNotFoundError:
     pass
 
-# Project about
+# Project metadata
 __author__ = "Santec Holdings Corporation"
 __license__ = "MIT"
 __organization__ = "Santec Holdings Corporation"
 __description__ = "Python Package for Santec Insertion Loss and Polarization Dependent Loss Swept Test System"
 __url__ = f"https://github.com/santec-corporation/{__project_name__}"
-__date__ = datetime.date.today().isoformat()  # Date format: "2025-08-04"
-__copyright__ = f"Copyright 2025-{datetime.date.today().year}, {__organization__}"
+
+# Date and copyright
+current_year = datetime.date.today().year
+__date__ = datetime.date.today().isoformat()
+__copyright__ = f"Copyright 2025-{current_year}, {__organization__}"
