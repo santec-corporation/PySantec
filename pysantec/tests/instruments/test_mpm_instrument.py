@@ -74,3 +74,10 @@ def test_wavelength(mpm, wavelength):
     print(f"Set Wavelength: {wavelength}, Get: {get_wavelength}")
     assert get_wavelength == wavelength
 
+
+@pytest.mark.parametrize("data_points", [1, 101, 1001, 10001, 100001])
+def test_logging_data_points(mpm, data_points):
+    mpm.set_logging_data_point(data_points)
+    get_data_points = mpm.get_logging_data_point()
+    print(f"Set Data Points: {data_points}, Get: {get_data_points}")
+    assert get_data_points == data_points
