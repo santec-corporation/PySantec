@@ -105,7 +105,7 @@ class MPMInstrument(BaseInstrument):
                             scan_speed: float,
                             tsl_actual_step: float,
                             mode: MeasurementMode):
-        self._set_and_get_function('Set_Logging_Paremeter_for_STS',
+        self._set_function('Set_Logging_Paremeter_for_STS',
                                    start_wavelength,
                                    stop_wavelength,
                                    step_wavelength,
