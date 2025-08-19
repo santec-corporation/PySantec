@@ -86,11 +86,14 @@ class BaseInstrument:
         response = self._init_response(response_type)
         return self._get_response(function_name, response)
 
-    def _set_function(self, function_name, *values):
-        getattr(self._instrument, function_name)(*values)
+    def _set_function(self, function_name, *args):
+        getattr(self._instrument, function_name)(*args)
 
-    def _set_and_get_function(self, function_name, *values):
-        return self._get_response(function_name, *values)
+    def _set_and_get_function(self, function_name, *args, response_type = -1):
+        if response_type is not -1:
+            response = self._init_response(response_type)
+            return self._get_response(function_name, *args, response)
+        return self._get_response(function_name, *args)
 
     @staticmethod
     def _init_response(response_type):
@@ -105,6 +108,11 @@ class BaseInstrument:
     def _set_function_enum(self, function_name, function_enum_name):
         self._check_restricted_method()
         _ = getattr(self._instrument, function_name)(function_enum_name.value)
+
+    def _set_and_get_function_enum(self, function_name, enum_type, *args):
+        self._check_restricted_method()
+        _, enum_value = getattr(self._instrument, function_name)(*args)
+        return enum_type(enum_value)
 
     def disconnect(self):
         _ = self._instrument.DisConnect()
