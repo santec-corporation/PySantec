@@ -2,7 +2,7 @@
 MPM Instrument Enums.
 """
 
-from enum import Enum
+from enum import Enum, IntEnum
 from ..santec_wrapper import MPM
 
 
@@ -29,3 +29,9 @@ class MeasurementMode(Enum):
 class TriggerInputMode(Enum):
     INTERNAL = MPM.Trigger_Input_Mode.Internal
     EXTERNAL = MPM.Trigger_Input_Mode.Extarnal
+
+
+class LoggingStatus(IntEnum):
+    STOPPED = -1
+    LOGGING = 0
+    COMPLETED = 1
