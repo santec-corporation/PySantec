@@ -13,11 +13,13 @@ from ..logger import get_logger
 # Get the logger
 logger = get_logger(__name__)
 
-# DLL Paths
+# Define the paths for the DLLs
+# Default path where the DLLs are expected to be found
 SYSTEM_DLL_PATH = r"C:\\Program Files\\santec\\Swept Test System IL And PDL"
 APPDATA_DLL_PATH = Path(os.getenv("APPDATA")) / "santec" / "pysantec" / "dlls"
 
 # DLL Names
+# List of DLLs to be loaded
 DLL_NAMES = [
     "InstrumentDLL.dll",
     "STSProcess.dll"

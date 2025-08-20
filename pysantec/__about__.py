@@ -1,3 +1,9 @@
+# pysantec/__about__.py
+
+"""
+This module contains metadata about the pysantec package.
+"""
+
 import datetime
 from importlib.metadata import PackageNotFoundError, version
 

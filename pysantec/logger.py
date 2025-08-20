@@ -57,4 +57,5 @@ _log_run_info()
 
 # Return the logger
 def get_logger(name: str) -> logging.Logger:
+    """ Get a logger with the specified name."""
     return logging.getLogger(name)

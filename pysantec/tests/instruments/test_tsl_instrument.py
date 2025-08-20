@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# pysantec/tests/instruments/test_tsl_instrument.py
+
 """
 TSL instrument tests.
 """

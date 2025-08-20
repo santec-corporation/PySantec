@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+
 """
-PySantec
 DAQ instrument control example.
 
 - Connect to a DAQ instrument.
@@ -23,3 +23,12 @@ if __name__ == '__main__':
 
     # Gets the sampling state of the DAQ
     print(daq.is_sampling)
+
+    # Starts the sampling
+    daq.start_sampling()
+
+    # Gets the sampling state of the DAQ
+    print(daq.is_sampling)
+
+    # Stops the sampling
+    daq.stop_sampling()

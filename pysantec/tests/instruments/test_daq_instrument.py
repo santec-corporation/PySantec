@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+# pysantec/tests/instruments/test_daq_instrument.py
+
 """
 DAQ instrument tests.
 """
-import time
 
+import time
 import pytest
 import pysantec
 

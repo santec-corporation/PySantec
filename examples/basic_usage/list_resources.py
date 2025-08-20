@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+
 """
-PySantec
 List resources example.
 
 - Lists all GPIB, USB, & DAQ instruments.

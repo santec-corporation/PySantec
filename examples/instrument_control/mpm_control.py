@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+
 """
-PySantec
 MPM instrument control example.
 
 - Connect to an MPM instrument.
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     instrument_manager = pysantec.InstrumentManager()
 
     # Connect to the instrument by passing the respective resource name
-    mpm = instrument_manager.connect_mpm('TCPIP::192.168.1.161::5000::SOCKET')
+    mpm = instrument_manager.connect_mpm('GPIB1::17::INSTR')
 
     # Prints the instrument Identification
     print(mpm.idn)
@@ -38,4 +38,3 @@ if __name__ == '__main__':
 
     # Gets the measurement mode of the MPM
     print(mpm.get_measurement_mode())
-

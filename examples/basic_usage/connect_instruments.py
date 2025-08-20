@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+
 """
-PySantec
 Instrument connection example.
 
 - Connect to a TSL instrument.
@@ -25,5 +25,3 @@ if __name__ == '__main__':
     print(tsl.idn)
     print(mpm.idn)
     print(daq.idn)      # Prints the DAQ device name
-
-
