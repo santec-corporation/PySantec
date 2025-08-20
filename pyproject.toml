@@ -1,11 +1,11 @@
 [project]
 name = "pysantec"
-version = "0.0.1"
-description = "Python Package for Santec Insertion Loss and Polarization Dependent Loss Swept Test System"
+version = "0.1.0"
+description = "Python Package for Santec IL and PDL Swept Test System"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.7"
 authors = [
     { name = "Santec Holdings Corporation" }
 ]
@@ -13,7 +13,7 @@ maintainers = [
     { name = "Rakshith P J" }
 ]
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering :: Physics",
@@ -23,14 +23,15 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: Microsoft :: Windows"
 ]
 
 [project.urls]
 Homepage = "https://github.com/santec-corporation/pysantec"
 Repository = "https://github.com/santec-corporation/pysantec"
+ChangeLog     = "https://github.com/santec-corporation/pysantec/CHANGELOG.md"
 
 [build-system]
 requires = ["setuptools>=61.2", "wheel"]
