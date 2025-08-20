@@ -11,7 +11,7 @@ Covers initial setup and connection:
 - Listing available GPIB, USB, and NI DAQ resources
 - Establishing connections to TSL (laser), MPM (power meter), and DAQ devices
 
-See [`basic_usage/README.md`](examples/basic_usage/README.md) for full instructions.
+See [`basic_usage/README.md`](basic_usage/README.md) for full instructions.
 
 ---
 
@@ -23,7 +23,7 @@ Demonstrates how to control individual instruments:
 - **MPM**: Channel configuration, data logging, and power measurements
 - **DAQ**: Analog input setup and data acquisition
 
-See [`instrument_control/README.md`](examples/instrument_control/README.md) for full examples.
+See [`instrument_control/README.md`](instrument_control/README.md) for full examples.
 
 ---
 
