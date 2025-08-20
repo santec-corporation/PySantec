@@ -21,7 +21,10 @@ except PackageNotFoundError:
 __author__ = "Santec Holdings Corporation"
 __license__ = "MIT"
 __organization__ = "Santec Holdings Corporation"
-__description__ = "Python Package for Santec Insertion Loss and Polarization Dependent Loss Swept Test System"
+__description__ = (
+    "Python Package for Santec Insertion Loss "
+    "and Polarization Dependent Loss Swept Test System"
+)
 __url__ = f"https://github.com/santec-corporation/{__project_name__}"
 
 # Date and copyright

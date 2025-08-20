@@ -4,10 +4,9 @@
 Santec Instrument DLL Wrapper.
 """
 
-from .santec_wrapper import TSL, MPM, DAQ
+from .enumerations import connection_enums, mpm_enums, tsl_enums
 from .instrument_wrapper import InstrumentWrapper
-from .enumerations import connection_enums, tsl_enums, mpm_enums
-
+from .santec_wrapper import DAQ, MPM, TSL
 
 __all__ = [
     "InstrumentWrapper",
@@ -16,5 +15,5 @@ __all__ = [
     "DAQ",
     "connection_enums",
     "tsl_enums",
-    "mpm_enums"
+    "mpm_enums",
 ]

@@ -6,14 +6,15 @@ MPM instrument tests.
 """
 
 import time
+
 import pytest
+
 import pysantec
 from pysantec.instruments.wrapper.enumerations.mpm_enums import (
-    PowerUnit, RangeMode, MeasurementMode, TriggerInputMode, LoggingStatus)
-
+    LoggingStatus, MeasurementMode, PowerUnit, RangeMode, TriggerInputMode)
 
 # Define the resource name for the MPM instrument
-MPM_RESOURCE_NAME = 'GPIB1::17::INSTR'
+MPM_RESOURCE_NAME = "GPIB1::17::INSTR"
 
 # Define the module number for the MPM instrument
 MODULE_NUMBER = 0
@@ -44,7 +45,9 @@ def test_idn(mpm):
     assert "MPM" in idn
 
 
-@pytest.mark.parametrize("unit", [PowerUnit.dBm, PowerUnit.mW, PowerUnit.dBmA, PowerUnit.mA])
+@pytest.mark.parametrize(
+    "unit", [PowerUnit.dBm, PowerUnit.mW, PowerUnit.dBmA, PowerUnit.mA]
+)
 def test_power_unit(mpm, unit):
     """Test setting and getting power unit."""
     mpm.set_power_unit(unit)
@@ -62,8 +65,16 @@ def test_range_mode(mpm, mode):
     assert range_mode == mode
 
 
-@pytest.mark.parametrize("mode", [MeasurementMode.CONST1, MeasurementMode.CONST2,
-                                  MeasurementMode.SWEEP1, MeasurementMode.SWEEP2, MeasurementMode.FREERUN])
+@pytest.mark.parametrize(
+    "mode",
+    [
+        MeasurementMode.CONST1,
+        MeasurementMode.CONST2,
+        MeasurementMode.SWEEP1,
+        MeasurementMode.SWEEP2,
+        MeasurementMode.FREERUN,
+    ],
+)
 def test_measurement_mode(mpm, mode):
     """Test setting and getting measurement mode."""
     mpm.set_measurement_mode(mode)
@@ -90,7 +101,9 @@ def test_averaging_time(mpm, value):
     assert averaging_time == value
 
 
-@pytest.mark.parametrize("wavelength", [1260, 1360, 1485, 1500, 1550, 1600, 1640])
+@pytest.mark.parametrize(
+    "wavelength", [1260, 1360, 1485, 1500, 1550, 1600, 1640]
+)
 def test_wavelength(mpm, wavelength):
     """Test setting and getting wavelength."""
     mpm.set_wavelength(wavelength)
@@ -108,7 +121,9 @@ def test_logging_data_points(mpm, data_points):
     assert get_data_points == data_points
 
 
-@pytest.mark.parametrize("mode", [TriggerInputMode.INTERNAL, TriggerInputMode.EXTERNAL])
+@pytest.mark.parametrize(
+    "mode", [TriggerInputMode.INTERNAL, TriggerInputMode.EXTERNAL]
+)
 def test_trigger_input_mode(mpm, mode):
     """Test setting and getting trigger input mode."""
     mpm.set_trigger_input_mode(mode)
@@ -117,32 +132,43 @@ def test_trigger_input_mode(mpm, mode):
     assert trigger_mode == mode
 
 
-@pytest.mark.parametrize("module_number,mode", [
-    (MODULE_NUMBER, MeasurementMode.CONST1),
-    (MODULE_NUMBER, MeasurementMode.SWEEP1),
-    (MODULE_NUMBER, MeasurementMode.CONST2),
-    (MODULE_NUMBER, MeasurementMode.SWEEP2)
-])
+@pytest.mark.parametrize(
+    "module_number,mode",
+    [
+        (MODULE_NUMBER, MeasurementMode.CONST1),
+        (MODULE_NUMBER, MeasurementMode.SWEEP1),
+        (MODULE_NUMBER, MeasurementMode.CONST2),
+        (MODULE_NUMBER, MeasurementMode.SWEEP2),
+    ],
+)
 def test_module_measurement_mode(mpm, module_number, mode):
     """Test setting and getting measurement mode for specific modules."""
     mpm.set_module_measurement_mode(module_number, mode)
     measurement_mode = mpm.get_module_measurement_mode(module_number)
-    print(f"Module {module_number} - Set Mode: {mode}, Get: {measurement_mode}")
+    print(
+        f"Module {module_number} - Set Mode: {mode}, Get: {measurement_mode}"
+    )
     assert measurement_mode == mode
 
 
-@pytest.mark.parametrize("module_number,channel_number,range_value", [
-    (MODULE_NUMBER, CHANNEL_NUMBER_1, 1),
-    (MODULE_NUMBER, CHANNEL_NUMBER_1, 2),
-    (MODULE_NUMBER, CHANNEL_NUMBER_1, 3),
-    (MODULE_NUMBER, CHANNEL_NUMBER_1, 4),
-    (MODULE_NUMBER, CHANNEL_NUMBER_1, 5)
-])
+@pytest.mark.parametrize(
+    "module_number,channel_number,range_value",
+    [
+        (MODULE_NUMBER, CHANNEL_NUMBER_1, 1),
+        (MODULE_NUMBER, CHANNEL_NUMBER_1, 2),
+        (MODULE_NUMBER, CHANNEL_NUMBER_1, 3),
+        (MODULE_NUMBER, CHANNEL_NUMBER_1, 4),
+        (MODULE_NUMBER, CHANNEL_NUMBER_1, 5),
+    ],
+)
 def test_channel_range(mpm, module_number, channel_number, range_value):
     """Test setting and getting channel range."""
     mpm.set_channel_range(module_number, channel_number, range_value)
     get_range = mpm.get_channel_range(module_number, channel_number)
-    print(f"Module {module_number}, Channel {channel_number} - Set Range: {range_value}, Get: {get_range}")
+    print(
+        f"Module {module_number}, Channel {channel_number}"
+        f" - Set Range: {range_value}, Get: {get_range}"
+    )
     assert get_range == range_value
 
 
@@ -157,12 +183,12 @@ def test_sweep_speed(mpm, speed):
 
 def test_scan_parameters(mpm):
     params = {
-        'start_wavelength': 1260.0,
-        'stop_wavelength': 1360.0,
-        'step_wavelength': 0.1,
-        'scan_speed': 1.0,
-        'tsl_actual_step': 0.1,
-        'mode': MeasurementMode.SWEEP1
+        "start_wavelength": 1260.0,
+        "stop_wavelength": 1360.0,
+        "step_wavelength": 0.1,
+        "scan_speed": 1.0,
+        "tsl_actual_step": 0.1,
+        "mode": MeasurementMode.SWEEP1,
     }
     mpm.set_scan_parameters(**params)
     time.sleep(2)  # Allow time for the parameters to be set
@@ -176,13 +202,16 @@ def test_logging_control(mpm):
     time.sleep(0.5)  # Allow some time for logging to start
     status, count = mpm.get_logging_status()
     assert status in LoggingStatus
-    time.sleep(2) # Allow some time for logging to collect data
+    time.sleep(2)  # Allow some time for logging to collect data
     mpm.stop_logging()
     status, count = mpm.get_logging_status()
     assert status in LoggingStatus
 
 
-@pytest.mark.parametrize("module_number,channel_number", [(MODULE_NUMBER, CHANNEL_NUMBER_1), (MODULE_NUMBER, CHANNEL_NUMBER_2)])
+@pytest.mark.parametrize(
+    "module_number,channel_number",
+    [(MODULE_NUMBER, CHANNEL_NUMBER_1), (MODULE_NUMBER, CHANNEL_NUMBER_2)],
+)
 def test_logging_data(mpm, module_number, channel_number):
     """Test logging data retrieval for modules and channels."""
     # Test module logging data
@@ -199,4 +228,4 @@ def test_logging_data(mpm, module_number, channel_number):
 def test_zeroing(mpm):
     """Test zeroing functionality."""
     mpm.perform_zeroing()
-    time.sleep(5) # Wait for zeroing to complete
+    time.sleep(5)  # Wait for zeroing to complete

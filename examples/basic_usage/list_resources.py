@@ -9,8 +9,7 @@ List resources example.
 # Import pysantec package
 import pysantec
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Prints the Santec DLL setup result
     print(pysantec.setup_dlls_result)
 

@@ -3,17 +3,20 @@ Instrument Manager module.
 """
 
 from typing import Dict
+
 from ..logger import get_logger
-from .tsl_instrument import TSLInstrument
-from .mpm_instrument import MPMInstrument
-from .daq_instrument import DAQInstrument
 from .base_instrument import BaseInstrument
+from .daq_instrument import DAQInstrument
+from .mpm_instrument import MPMInstrument
+from .tsl_instrument import TSLInstrument
 from .wrapper import InstrumentWrapper
-from .wrapper.enumerations.connection_enums import ConnectionType, GPIBType, Terminator
+from .wrapper.enumerations.connection_enums import (ConnectionType, GPIBType,
+                                                    Terminator)
 
 
 class InstrumentManager:
     """Main instrument manager for device detection and connection"""
+
     def __init__(self):
         """Initializes the InstrumentManager."""
         self._resources = []
@@ -78,7 +81,9 @@ class InstrumentManager:
         except Exception as e:
             self.logger.error(f"Error listing Serial Port resources: {e}")
 
-    def _connect(self, resource_name, terminator: Terminator = Terminator.CRLF):
+    def _connect(
+        self, resource_name, terminator: Terminator = Terminator.CRLF
+    ):
         """Connects to the specified resource."""
         connection_type = None
         if resource_name in self._connected_instruments.keys():
@@ -92,7 +97,9 @@ class InstrumentManager:
             raise Exception(f"No resources available: {len(self._resources)}")
 
         if resource_name not in self._resources:
-            self.logger.error(f"Try to connect invalid resource: {resource_name}")
+            self.logger.error(
+                f"Try to connect invalid resource: {resource_name}"
+            )
             raise Exception(f"Invalid resource: {resource_name}")
 
         if not connection_type:
@@ -106,13 +113,17 @@ class InstrumentManager:
 
         return self._instrument
 
-    def _establish_connection(self,
-                              resource_name: str,
-                              connection_type: ConnectionType,
-                              terminator: Terminator
-                              ):
+    def _establish_connection(
+        self,
+        resource_name: str,
+        connection_type: ConnectionType,
+        terminator: Terminator,
+    ):
         """Establishes a connection to the specified resource."""
-        self.logger.info(f"Establishing connection to {resource_name} of type {connection_type.name}...")
+        self.logger.info(
+            f"Establishing connection to {resource_name} "
+            f"of type {connection_type.name}..."
+        )
         match connection_type:
             case ConnectionType.GPIB:
                 self._gpib_connection(resource_name, terminator)
@@ -128,27 +139,40 @@ class InstrumentManager:
     def _gpib_connection(self, resource_name, terminator):
         """Establishes a GPIB connection."""
         self.logger.info(f"Connecting to GPIB resource: {resource_name}")
-        gpib_board, gpib_address, _ = resource_name.split('::')   # GPIB0::10::INSTR
+        gpib_board, gpib_address, _ = resource_name.split(
+            "::"
+        )  # GPIB0::10::INSTR
         gpib_board = gpib_board[-1]
-        self._instrument_wrapper.connect_gpib(self._instrument, int(gpib_board), int(gpib_address),
-                                              GPIBType.NI4882, terminator)
+        self._instrument_wrapper.connect_gpib(
+            self._instrument,
+            int(gpib_board),
+            int(gpib_address),
+            GPIBType.NI4882,
+            terminator,
+        )
 
     def _usb_connection(self, resource_name):
         """Establishes a USB connection."""
         self.logger.info(f"Connecting to USB resource: {resource_name}")
-        usb_device_id = 1  # TODO: Refactor the usb device ID assignment
+        # usb_device_id = 1  # TODO: Refactor the usb device ID assignment
         raise NotImplementedError("USB connection is yet to be implemented.")
 
     def _tcpip_connection(self, resource_name, terminator):
         """Establishes a TCPIP connection."""
         self.logger.info(f"Connecting to TCPIP resource: {resource_name}")
-        _, ip_address, port_number, _ = resource_name.split('::')     # TCPIP0::192.168.10.101::5000::SOCKET
-        self._instrument_wrapper.connect_tcpip(self._instrument, str(ip_address), int(port_number), terminator)
+        _, ip_address, port_number, _ = resource_name.split(
+            "::"
+        )  # TCPIP0::192.168.10.101::5000::SOCKET
+        self._instrument_wrapper.connect_tcpip(
+            self._instrument, str(ip_address), int(port_number), terminator
+        )
 
     def _dev_connection(self, resource_name):
         """Establishes a connection to a NI DAQ device."""
         self.logger.info(f"Connecting to NI DAQ resource: {resource_name}")
-        self._instrument_wrapper.connect_daq(self._instrument, resource_name)       # Dev1
+        self._instrument_wrapper.connect_daq(
+            self._instrument, resource_name
+        )  # Dev1
 
     @staticmethod
     def _get_connection_type(resource_name):
@@ -161,6 +185,7 @@ class InstrumentManager:
         elif "DEV" in resource_name:
             return ConnectionType.DEV
         return ConnectionType.NULL
+
     # endregion
 
     def list_resources(self) -> list:
@@ -177,7 +202,9 @@ class InstrumentManager:
         self.logger.info(f"Found {len(resources)} resources")
         return resources
 
-    def connect_tsl(self, resource_name: str) -> TSLInstrument | BaseInstrument:
+    def connect_tsl(
+        self, resource_name: str
+    ) -> TSLInstrument | BaseInstrument:
         """Connects to a TSL instrument."""
         if not resource_name:
             raise ValueError("Resource name cannot be empty.")
@@ -186,7 +213,9 @@ class InstrumentManager:
         self._instrument = TSLInstrument()
         return self._connect(resource_name, terminator)
 
-    def connect_mpm(self, resource_name: str) -> MPMInstrument | BaseInstrument:
+    def connect_mpm(
+        self, resource_name: str
+    ) -> MPMInstrument | BaseInstrument:
         """Connects to an MPM instrument."""
         if not resource_name:
             raise ValueError("Resource name cannot be empty.")

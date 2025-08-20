@@ -6,13 +6,16 @@ TSL instrument tests.
 """
 
 import time
-import pytest
-import pysantec
-from pysantec.instruments.wrapper.enumerations.tsl_enums import PowerUnit, LDStatus, SweepStatus
 
+import pytest
+
+import pysantec
+from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
+                                                                 PowerUnit,
+                                                                 SweepStatus)
 
 # Define the resource name for the TSL instrument
-TSL_RESOURCE_NAME = 'GPIB1::3::INSTR'
+TSL_RESOURCE_NAME = "GPIB1::3::INSTR"
 
 
 # TSL Model Type Boolean
@@ -75,8 +78,13 @@ def test_get_sweep_status(tsl):
     """Test the sweep status retrieval of the TSL instrument."""
     sweep_status = tsl.get_sweep_status()
     print(f"Sweep Status: {sweep_status}")
-    assert sweep_status in [SweepStatus.STANDBY, SweepStatus.RUNNING, SweepStatus.PAUSE,
-                                    SweepStatus.STANDING_BY_TRIGGER, SweepStatus.PREPARATION_FOR_SWEEP_START]
+    assert sweep_status in [
+        SweepStatus.STANDBY,
+        SweepStatus.RUNNING,
+        SweepStatus.PAUSE,
+        SweepStatus.STANDING_BY_TRIGGER,
+        SweepStatus.PREPARATION_FOR_SWEEP_START,
+    ]
 
 
 @pytest.mark.parametrize("power", [-5, 0, 2, 5])
@@ -108,20 +116,23 @@ def test_wavelength_logging_data(tsl):
     assert data_points == len(data)
 
 
-@pytest.mark.parametrize("scan_params", [
-    {
-        'start_wavelength': WAVELENGTHS[0],
-        'stop_wavelength': WAVELENGTHS[-1],
-        'step_wavelength': 0.1,
-        'scan_speed': 1.0
-    },
-    {
-        'start_wavelength': WAVELENGTHS[0],
-        'stop_wavelength': WAVELENGTHS[-1],
-        'step_wavelength': 0.05,
-        'scan_speed': 50.0
-    }
-])
+@pytest.mark.parametrize(
+    "scan_params",
+    [
+        {
+            "start_wavelength": WAVELENGTHS[0],
+            "stop_wavelength": WAVELENGTHS[-1],
+            "step_wavelength": 0.1,
+            "scan_speed": 1.0,
+        },
+        {
+            "start_wavelength": WAVELENGTHS[0],
+            "stop_wavelength": WAVELENGTHS[-1],
+            "step_wavelength": 0.05,
+            "scan_speed": 50.0,
+        },
+    ],
+)
 def test_scan_parameters(tsl, scan_params):
     """Test the scan parameters setting of the TSL instrument."""
     actual_step = tsl.set_scan_parameters(**scan_params)
@@ -129,16 +140,22 @@ def test_scan_parameters(tsl, scan_params):
     assert actual_step > 0
 
 
-@pytest.mark.parametrize("wait_time,expected_status", [
-    (1, SweepStatus.STANDBY),
-    (2, SweepStatus.RUNNING)
-])
+@pytest.mark.parametrize(
+    "wait_time,expected_status",
+    [(1, SweepStatus.STANDBY), (2, SweepStatus.RUNNING)],
+)
 def test_wait_for_sweep_status(tsl, wait_time, expected_status):
     """Test waiting for a specific sweep status."""
     tsl.wait_for_sweep_status(wait_time, expected_status)
     status = tsl.get_sweep_status()
-    print(f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}")
-    assert status in [SweepStatus.STANDBY, SweepStatus.RUNNING, SweepStatus.PAUSE]
+    print(
+        f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}"
+    )
+    assert status in [
+        SweepStatus.STANDBY,
+        SweepStatus.RUNNING,
+        SweepStatus.PAUSE,
+    ]
 
 
 def test_tsl_busy_check(tsl):
@@ -146,7 +163,11 @@ def test_tsl_busy_check(tsl):
     tsl.tsl_busy_check(1)
     status = tsl.get_sweep_status()
     print(f"Status after busy check: {status}")
-    assert status in [SweepStatus.STANDBY, SweepStatus.RUNNING, SweepStatus.PAUSE]
+    assert status in [
+        SweepStatus.STANDBY,
+        SweepStatus.RUNNING,
+        SweepStatus.PAUSE,
+    ]
 
 
 def test_system_error(tsl):
@@ -156,10 +177,7 @@ def test_system_error(tsl):
     assert isinstance(error, str)
 
 
-@pytest.mark.parametrize("speed,step_wavelength", [
-    (0.5, 0.1),
-    (1.0, 0.05)
-])
+@pytest.mark.parametrize("speed,step_wavelength", [(0.5, 0.1), (1.0, 0.05)])
 def test_power_monitor_data(tsl, speed, step_wavelength):
     """Test the power monitor data retrieval functionality."""
     data_points, data = tsl.get_power_monitor_data(speed, step_wavelength)

@@ -3,11 +3,13 @@ Base instrument module.
 """
 
 import inspect
-from .wrapper import InstrumentWrapper, TSL, MPM
+
+from .wrapper import MPM, TSL, InstrumentWrapper
 
 
 class BaseInstrument:
     """Base class for instruments."""
+
     def __init__(self):
         self._instrument = None
 
@@ -23,11 +25,13 @@ class BaseInstrument:
             stack = inspect.stack()
             caller_frame = stack[1].function
             raise PermissionError(
-                f"{self._instrument.__class__.__name__} is not allowed to use method '{caller_frame}'."
+                f"{self._instrument.__class__.__name__} "
+                f"is not allowed to use method '{caller_frame}'."
             )
 
     def query(self, command: str) -> tuple[int, str]:
-        """Send a query command to the instrument and return the status and response."""
+        """Send a query command to the instrument
+        and return the status and response."""
         """This method is restricted to TSL and MPM instruments."""
         self._check_restricted_method()
         command = command.upper()
@@ -61,7 +65,7 @@ class BaseInstrument:
     @property
     def idn(self):
         """Return the identification string of the instrument."""
-        _, idn = self.query('*IDN?')
+        _, idn = self.query("*IDN?")
         return idn
 
     @property
@@ -84,43 +88,41 @@ class BaseInstrument:
         _, response = getattr(self._instrument, function_name)(*args)
         return response
 
-    def _get_multiple_responses(self,
-                                function_name,
-                                response_type_1, response_type_2):
+    def _get_multiple_responses(
+        self, function_name, response_type_1, response_type_2
+    ):
         """Get multiple responses from the instrument for a given function."""
         response_1 = self._init_response(response_type_1)
         response_2 = self._init_response(response_type_2)
-        _, response_1, response_2 = getattr(self._instrument, function_name)(response_1, response_2)
+        _, response_1, response_2 = getattr(self._instrument, function_name)(
+            response_1, response_2
+        )
         return response_1, response_2
 
-    def _set_and_get_multiple_responses(self,
-                                        function_name,
-                                        response_type_1, response_type_2,
-                                        *args):
-        """Set values and get multiple responses from the instrument for a given function."""
+    def _set_and_get_multiple_responses(
+        self, function_name, response_type_1, response_type_2, *args
+    ):
+        """Set values and get multiple responses
+        from the instrument for a given function."""
         response_1 = self._init_response(response_type_1)
         response_2 = self._init_response(response_type_2)
-        _, response_1, response_2 = getattr(self._instrument, function_name)(*args, response_1, response_2)
+        _, response_1, response_2 = getattr(self._instrument, function_name)(
+            *args, response_1, response_2
+        )
         return response_1, response_2
 
-    def _get_function(self,
-                      function_name,
-                      response_type):
+    def _get_function(self, function_name, response_type):
         """Get a response from the instrument for a given function."""
         response = self._init_response(response_type)
         return self._get_response(function_name, response)
 
-    def _set_function(self,
-                      function_name,
-                      *args):
+    def _set_function(self, function_name, *args):
         """Set values on the instrument for a given function."""
         getattr(self._instrument, function_name)(*args)
 
-    def _set_and_get_function(self,
-                              function_name,
-                              *args,
-                              response_type = -1):
-        """Set values and get a response from the instrument for a given function."""
+    def _set_and_get_function(self, function_name, *args, response_type=-1):
+        """Set values and get a response
+        from the instrument for a given function."""
         if response_type != -1:
             response = self._init_response(response_type)
             return self._get_response(function_name, *args, response)
@@ -131,27 +133,21 @@ class BaseInstrument:
         """Initialize a response based on the provided type."""
         return response_type() if isinstance(response_type, type) else None
 
-    def _get_function_enum(self,
-                           function_name,
-                           function_enum_name):
+    def _get_function_enum(self, function_name, function_enum_name):
         """Get an enum value from the instrument for a given function."""
         self._check_restricted_method()
         enum_value = function_enum_name.value
         _, enum_value = getattr(self._instrument, function_name)(enum_value)
         return function_enum_name.__class__(enum_value)
 
-    def _set_function_enum(self,
-                           function_name,
-                           function_enum_name):
+    def _set_function_enum(self, function_name, function_enum_name):
         """Set an enum value on the instrument for a given function."""
         self._check_restricted_method()
         _ = getattr(self._instrument, function_name)(function_enum_name.value)
 
-    def _set_and_get_function_enum(self,
-                                   function_name,
-                                   enum_type,
-                                   *args):
-        """Set values and get an enum value from the instrument for a given function."""
+    def _set_and_get_function_enum(self, function_name, enum_type, *args):
+        """Set values and get an enum value
+        from the instrument for a given function."""
         self._check_restricted_method()
         _, enum_value = getattr(self._instrument, function_name)(*args)
         return enum_type(enum_value)

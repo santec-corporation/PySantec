@@ -9,17 +9,15 @@ MPM instrument control example.
 
 # Import pysantec package
 import pysantec
-
 # Import the MPM enums
 from pysantec.instruments import mpm_enums
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create an instance of the Instrument manager class
     instrument_manager = pysantec.InstrumentManager()
 
     # Connect to the instrument by passing the respective resource name
-    mpm = instrument_manager.connect_mpm('GPIB1::17::INSTR')
+    mpm = instrument_manager.connect_mpm("GPIB1::17::INSTR")
 
     # Prints the instrument Identification
     print(mpm.idn)

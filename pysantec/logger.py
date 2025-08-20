@@ -2,11 +2,12 @@
 PySantec logger module.
 """
 
-import os
-import sys
-import logging
 import datetime
+import logging
+import os
 import platform
+import sys
+
 from . import __about__
 
 # Ensure log directory exists
@@ -30,16 +31,17 @@ if not root_logger.hasHandlers():
         level=LOGGING_LEVEL,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         handlers=[
-            logging.FileHandler(LOG_FILE, mode='w'),
+            logging.FileHandler(LOG_FILE, mode="w"),
             # logging.StreamHandler()
-        ]
+        ],
     )
 
 # Log the project version
 logging.info(f"Project Version: {__about__.__version__}")
 
+
 def _log_run_info():
-    """ Log environment information. """
+    """Log environment information."""
     info = [
         f"Python Version: {sys.version}",
         f"Python Implementation: {platform.python_implementation()}",
@@ -47,15 +49,18 @@ def _log_run_info():
         f"Operating System: {platform.system()} {platform.release()}",
         f"Platform ID: {platform.platform()}",
         f"Machine: {platform.machine()}",
-        f"Processor: {platform.processor()}"
+        f"Processor: {platform.processor()}",
     ]
     for line in info:
         logging.info(line)
+
 
 # Log the environment information
 _log_run_info()
 
 # Return the logger
+
+
 def get_logger(name: str) -> logging.Logger:
-    """ Get a logger with the specified name."""
+    """Get a logger with the specified name."""
     return logging.getLogger(name)

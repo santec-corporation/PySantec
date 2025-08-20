@@ -6,12 +6,13 @@ DAQ instrument tests.
 """
 
 import time
+
 import pytest
+
 import pysantec
 
-
 # This is a pytest fixture that sets up the DAQ instrument for testing.
-DAQ_DEVICE_NAME = 'Dev1'  # Replace with your actual DAQ device name
+DAQ_DEVICE_NAME = "Dev1"  # Replace with your actual DAQ device name
 
 
 @pytest.fixture(scope="module")
@@ -102,10 +103,10 @@ def test_set_sampling_parameters(daq):
     """Test the set_sampling_parameters method of the DAQ instrument."""
     # Test sampling parameters
     params = {
-        'start_wavelength': 1260.0,
-        'stop_wavelength': 1360.0,
-        'speed': 1,
-        'tsl_actual_step': 0.1
+        "start_wavelength": 1260.0,
+        "stop_wavelength": 1360.0,
+        "speed": 1,
+        "tsl_actual_step": 0.1,
     }
     daq.set_sampling_parameters(**params)
     time.sleep(0.5)  # Allow time for parameters to be set
@@ -114,7 +115,8 @@ def test_set_sampling_parameters(daq):
 # def test_get_sampling_data(daq):
 #     """Test the sampling data retrieval method of the DAQ instrument."""
 #     trigger, monitor = daq.get_sampling_data()
-#     print(f"Sampling Data - Trigger points: {len(trigger)}, Monitor points: {len(monitor)}")
+#     print(f"Sampling Data - Trigger points: {len(trigger)}, "
+#           f"Monitor points: {len(monitor)}")
 #     assert isinstance(trigger, (list, tuple))
 #     assert isinstance(monitor, (list, tuple))
 #
@@ -122,6 +124,7 @@ def test_set_sampling_parameters(daq):
 # def test_get_sampling_raw_data(daq):
 #     """Test the sampling raw data retrieval method of the DAQ instrument."""
 #     raw_trigger, raw_monitor = daq.get_sampling_raw_data()
-#     print(f"Raw Sampling Data - Trigger points: {len(raw_trigger)}, Monitor points: {len(raw_monitor)}")
+#     print(f"Raw Sampling Data - Trigger points: {len(raw_trigger)}, "
+#           f"Monitor points: {len(raw_monitor)}")
 #     assert isinstance(raw_trigger, (list, tuple))
 #     assert isinstance(raw_monitor, (list, tuple))

@@ -3,11 +3,12 @@ Unified wrapper for the Santec Instrument DLL.
 """
 
 from logging import Logger
-from typing import List, Optional, Any
-from .santec_wrapper import DAQ
-from .santec_communication_wrapper import MainCommunication
-from .enumerations.connection_enums import ConnectionType, Terminator, GPIBType
+from typing import Any, List, Optional
+
+from .enumerations.connection_enums import ConnectionType, GPIBType, Terminator
 from .exceptions import InstrumentConnectionError, InstrumentOperationError
+from .santec_communication_wrapper import MainCommunication
+from .santec_wrapper import DAQ
 
 
 class InstrumentWrapper:
@@ -71,7 +72,9 @@ class InstrumentWrapper:
             self.logger.debug("No DAQ devices connected")
             return None
         if error_code != 0:
-            raise InstrumentOperationError("Error while getting DAQ devices", error_code)
+            raise InstrumentOperationError(
+                "Error while getting DAQ devices", error_code
+            )
 
         return devices
 
@@ -90,11 +93,19 @@ class InstrumentWrapper:
         """
         instrument = instrument_instance.instrument(InstrumentWrapper)
         if not instrument:
-            raise InstrumentConnectionError("Could not create instrument instance")
+            raise InstrumentConnectionError(
+                "Could not create instrument instance"
+            )
         return instrument
 
-    def connect_gpib(self, instrument_instance: Any, gpib_board: int, gpib_address: int,
-                     gpib_connect_type: GPIBType, terminator: Terminator) -> None:
+    def connect_gpib(
+        self,
+        instrument_instance: Any,
+        gpib_board: int,
+        gpib_address: int,
+        gpib_connect_type: GPIBType,
+        terminator: Terminator,
+    ) -> None:
         """Connect to instrument via GPIB.
 
         Args:
@@ -118,17 +129,23 @@ class InstrumentWrapper:
             error_code = instrument.Connect(ConnectionType.GPIB.value)
             if error_code != 0:
                 raise InstrumentConnectionError(
-                    f"Failed to establish GPIB connection with GPIB{gpib_board}::{gpib_address}",
-                    error_code
+                    f"Failed to establish GPIB connection "
+                    f"with GPIB{gpib_board}::{gpib_address}",
+                    error_code,
                 )
         except Exception as e:
             raise InstrumentConnectionError(
                 f"Error connecting to GPIB{gpib_board}::{gpib_address}",
-                str(e)
+                str(e),
             )
 
-    def connect_tcpip(self, instrument_instance: Any, ip_address: str, port_number: int,
-                      terminator: Terminator) -> None:
+    def connect_tcpip(
+        self,
+        instrument_instance: Any,
+        ip_address: str,
+        port_number: int,
+        terminator: Terminator,
+    ) -> None:
         """Connect to instrument via TCP/IP.
 
         Args:
@@ -151,13 +168,13 @@ class InstrumentWrapper:
             error_code = instrument.Connect(ConnectionType.TCPIP.value)
             if error_code != 0:
                 raise InstrumentConnectionError(
-                    f"Failed to establish LAN connection with {ip_address}::{port_number}",
-                    error_code
+                    f"Failed to establish LAN connection "
+                    f"with {ip_address}::{port_number}",
+                    error_code,
                 )
         except Exception as e:
             raise InstrumentConnectionError(
-                f"Error connecting to {ip_address}::{port_number}",
-                str(e)
+                f"Error connecting to {ip_address}::{port_number}", str(e)
             )
 
     def connect_daq(self, instrument_instance: Any, device_name: str) -> None:
@@ -178,12 +195,9 @@ class InstrumentWrapper:
             if error_code != 0:
                 raise InstrumentConnectionError(
                     f"Failed to establish DAQ connection with {device_name}",
-                    error_code
+                    error_code,
                 )
         except Exception as e:
             raise InstrumentConnectionError(
-                f"Error connecting to DAQ {device_name}",
-                str(e)
+                f"Error connecting to DAQ {device_name}", str(e)
             )
-
-
