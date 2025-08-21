@@ -1,12 +1,12 @@
-# 📘 Basic Usage Examples
+# Basic Usage Examples
 
 This directory contains basic examples demonstrating how to use the **PySantec** package to interact with Santec instruments and NI DAQ devices.
 
 ---
 
-## 📂 Examples
+## Examples
 
-### 1. 🔍 List Resources — `list_resources.py`
+### 1. List Resources — `list_resources.py`
 
 Demonstrates how to detect and list all available instruments connected to your system:
 
@@ -25,7 +25,7 @@ print(resources)
 ```
 
 
-### 2. 🔌 Connect Instruments — `connect_instruments.py`
+### 2. Connect Instruments — `connect_instruments.py`
 
 Shows how to establish connections to different types of instruments:
 
@@ -65,7 +65,7 @@ Run the connection example:
 python connect_instruments.py
 ```
 
-### 🔤 Resource Name Formats
+### Resource Name Formats
 
 | Type    | Format Example                                    |
 |---------|---------------------------------------------------|
@@ -75,10 +75,3 @@ python connect_instruments.py
 
 
 ---
-
-### 📦 Requirements
-
-- `pysantec` package installed
-- Santec DLLs properly set up
-- NI-VISA for GPIB communication
-- NI-DAQmx for DAQ devices

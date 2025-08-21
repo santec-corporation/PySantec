@@ -1,10 +1,10 @@
-# 🔧 PySantec Examples
+# PySantec Examples
 
 This directory provides example scripts for using the **PySantec** package to interface with Santec instruments/devices.
 
 ---
 
-## 📘 Basic Usage Examples
+## Basic Usage Examples
 
 Covers initial setup and connection:
 
@@ -15,7 +15,7 @@ See [`basic_usage/README.md`](basic_usage/README.md) for full instructions.
 
 ---
 
-## 🧪 Instrument Control Examples
+## Instrument Control Examples
 
 Demonstrates how to control individual instruments:
 
@@ -27,7 +27,7 @@ See [`instrument_control/README.md`](instrument_control/README.md) for full exam
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 - Platform: Windows 10+
 - Python version 3.7+
@@ -39,7 +39,3 @@ See [`instrument_control/README.md`](instrument_control/README.md) for full exam
 - Optional: NI-MAX for configuring/test-running connected devices
 
 ---
-
-## 📝 License
-
-This project is licensed under the [MIT License](/./LICENSE).

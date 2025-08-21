@@ -9,6 +9,7 @@ This directory contains examples demonstrating how to control individual Santec 
 ### Basic TSL Control
 ```python
 from pysantec import InstrumentManager
+from pysantec.instruments import tsl_enums
 
 # Connect to TSL
 manager = InstrumentManager()
@@ -18,16 +19,14 @@ tsl = manager.connect_tsl('GPIB1::3::INSTR')
 tsl.set_wavelength(1550.0)  # Set wavelength in nm
 tsl.set_power(6.0)          # Set output power in dBm
 tsl.set_power_unit('dBm')   # Set power unit
-tsl.output_on()             # Turn laser output on
+tsl.set_ld_status(tsl_enums.LDStatus.ON)       # Turn laser on
 ```
 
 ### Sweep Configuration
 
 ```python
 # Configure sweep parameters
-tsl.set_sweep_wavelength_range(1540.0, 1560.0)  # Start, stop in nm
-tsl.set_sweep_speed(20.0)                        # Speed in nm/s
-tsl.set_sweep_mode('Continuous')                 # Set sweep mode
+tsl.set_scan_parameters(1540.0, 1560., 0.1, 10.0)  # Set scan parameters
 ```
 
 
@@ -36,38 +35,43 @@ tsl.set_sweep_mode('Continuous')                 # Set sweep mode
 ### Basic MPM Control
 
 ```python
+from pysantec import InstrumentManager
+from pysantec.instruments import tsl_enums
+
 # Connect to MPM
+manager = InstrumentManager()
 mpm = manager.connect_mpm('GPIB1::17::INSTR')
 
 # Configure channels
 mpm.set_wavelength(1550.0)           # Set wavelength in nm
 mpm.set_averaging_time(0.1)          # Set averaging time in ms
 mpm.set_range_mode('AUTO')           # Set range mode
-mpm.zero_offset_all_channels()       # Perform zero offset
+mpm.perform_zeroing()                # Perform zero offset
 ```
-
-### Data Logging
-
-```python
-# Configure logging
-mpm.set_logging_parameters(1000, 0.1)  # Points, interval
-mpm.start_logging()
-data = mpm.get_logging_data()
-```
-
 
 ## DAQ Examples - `daq_instrument.py`
 
 ### Basic DAQ Control
 
 ```python
+from pysantec import InstrumentManager
+from pysantec.instruments import tsl_enums
+
 # Connect to DAQ
+manager = InstrumentManager()
 daq = manager.connect_daq('Dev1')
 
-# Configure analog input
-daq.configure_ai_channel('ai0', -10.0, 10.0)  # Channel, min V, max V
-daq.start_ai_task()
-data = daq.read_ai_samples(1000)              # Read 1000 samples
+# Gets the sampling state of the DAQ
+print(daq.is_sampling)
+
+# Starts the sampling
+daq.start_sampling()
+
+# Gets the sampling state of the DAQ
+print(daq.is_sampling)
+
+# Stops the sampling
+daq.stop_sampling()
 ```
 
 ---
@@ -89,15 +93,15 @@ data = daq.read_ai_samples(1000)              # Read 1000 samples
 
 #### TSL Parameters
 
-- Wavelength range: 1500-1630nm (typical)
-- Power range: -20 to +13dBm (typical)
-- Sweep speeds: 0.5 to 100nm/s
+- Wavelength range: 1260-1640nm (typical)
+- Power range: -15 to +13dBm (typical)
+- Sweep speeds: 1.0 to 200nm/s
 
 #### MPM Parameters
 
-- Wavelength range: 800-1700nm (typical)
-- Power range: +10 to -90dBm (typical)
-- Averaging time: 0.01ms to 10s
+- Wavelength range: 1250-1680nm (typical)
+- Power range: +10 to -80dBm (typical)
+- Averaging time: 0.01ms to 100s
 
 #### DAQ Parameters
 
