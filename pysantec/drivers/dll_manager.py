@@ -6,11 +6,10 @@ PySantec DLL Manager.
 """
 
 import os
-from pathlib import Path
-
 import clr
-
+from pathlib import Path
 from ..logger import get_logger
+
 
 # Get the logger
 logger = get_logger(__name__)
@@ -24,15 +23,14 @@ APPDATA_DLL_PATH = Path(os.getenv("APPDATA")) / "santec" / "pysantec" / "dlls"
 # List of DLLs to be loaded
 DLL_NAMES = ["InstrumentDLL.dll", "STSProcess.dll"]
 
+
 # Check if DLLs exist
-
-
 def dlls_exist(folder_path):
     """Checks if the DLLs are present in the provided folder path."""
     return all((Path(folder_path) / dll).exists() for dll in DLL_NAMES)
 
 
-def setup_dlls():
+def load_dlls():
     """Gets the path where the DLLs exist."""
     if dlls_exist(SYSTEM_DLL_PATH):
         dll_path = SYSTEM_DLL_PATH
@@ -44,10 +42,10 @@ def setup_dlls():
     else:
         raise RuntimeError("DLLs not found.")
 
-    return load_dlls(dll_path)
+    return setup_dlls(dll_path)
 
 
-def load_dlls(dll_path, dlls=None):
+def setup_dlls(dll_path, dlls=None):
     """
     Loads the DLLs from the given path.
 

@@ -10,9 +10,6 @@ List resources example.
 import pysantec
 
 if __name__ == "__main__":
-    # Prints the Santec DLL setup result
-    print(pysantec.setup_dlls_result)
-
     # Create an instance of the Instrument manager class
     instrument_manager = pysantec.InstrumentManager()
 
