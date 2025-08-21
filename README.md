@@ -36,20 +36,19 @@ You must also install pythonnet (used to interface with Santec DLLs):
 pip install pythonnet
 ```
 
-⚠️ PythonNet (clr) only works on Windows with CPython, not PyPy or other runtimes.
-
 ---
 
 ### Platform & Requirements
 
 - OS: Windows 10+ 
 - Python: 3.7+
-- Santec DLLs: Installed via Santec Swept Test System (IL/PDL) software.Download the latest version of the 
-- STS IL/PDL software [here](https://downloads.santec.com/api/download/ce94afc6-f283-4123-bf7b-3db322540c2b).
+- Santec DLLs: Installed via Santec Swept Test System (IL/PDL) software.
+- Download the latest version of the STS IL/PDL software [here](https://downloads.santec.com/api/download/ce94afc6-f283-4123-bf7b-3db322540c2b).
 - .NET: .NET Framework (as required by Santec DLLs)
 
-⚠️ PySantec relies on Santec’s .NET Framework DLLs and therefore does not support Linux or macOS. 
-Importing the package on non‑Windows platforms raises a clear error.
+> ⚠️ PySantec relies on Santec’s .NET Framework DLLs and therefore does not support Linux or macOS.
+
+> Importing the package on non‑Windows platforms raises an error.
 
 
 ### Other Dependencies
@@ -170,10 +169,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - National Instruments – for NI-VISA, NI-488.2 and NI-DAQmx support
 
 ---
 
-## 📘 Documentation is under development — contributions are welcome!
+## Documentation is under development — contributions are welcome!
