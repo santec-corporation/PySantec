@@ -1,6 +1,6 @@
 [project]
 name = "pysantec"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python Package for Santec IL and PDL Swept Test System"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
@@ -31,7 +31,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/santec-corporation/pysantec"
 Repository = "https://github.com/santec-corporation/pysantec"
-ChangeLog     = "https://github.com/santec-corporation/pysantec/CHANGELOG.md"
+ChangeLog = "https://github.com/santec-corporation/pysantec/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["setuptools>=61.2", "wheel"]
