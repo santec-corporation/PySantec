@@ -10,7 +10,7 @@
 
 ---
 
-## 🧩 Overview
+## Overview
 
 **PySantec** provides a high-level Python interface for controlling Santec instruments and NI DAQ devices, enabling automated optical measurements with ease. 
 It simplifies:
@@ -22,7 +22,7 @@ It simplifies:
 
 ---
 
-## 📦 Installation
+## Installation
 
 Install via pip:
 
@@ -40,16 +40,27 @@ pip install pythonnet
 
 ---
 
-### Dependencies
+### Platform & Requirements
 
-- Windows 10+ 
-- Python 3.7+
-- Santec instrument DLLs (must be properly set up in PATH)
+- OS: Windows 10+ 
+- Python: 3.7+
+- Santec DLLs: Installed via Santec Swept Test System (IL/PDL) software.Download the latest version of the 
+- STS IL/PDL software [here](https://downloads.santec.com/api/download/ce94afc6-f283-4123-bf7b-3db322540c2b).
+- .NET: .NET Framework (as required by Santec DLLs)
+
+⚠️ PySantec relies on Santec’s .NET Framework DLLs and therefore does not support Linux or macOS. 
+Importing the package on non‑Windows platforms raises a clear error.
+
+
+### Other Dependencies
+
 - pythonnet (clr) — required for loading Santec DLLs
 - [NI-488.2](https://www.ni.com/en-us/support/downloads/drivers/download.ni-488-2.html) for GPIB devices
 - [NI-VISA](https://www.ni.com/en-us/support/downloads/drivers/download.ni-visa.html) for GPIB communication
 - [NI-DAQmx](https://www.ni.com/en-us/support/downloads/drivers/download.ni-daqmx.html) for DAQ devices
 - Optional: NI-MAX for configuring/test-running connected devices
+
+---
 
 ## ⚡ Quick Start
 ```python
@@ -77,6 +88,7 @@ mpm.set_wavelength(1550.0)
 # Basic DAQ operation
 print(daq.is_sampling)
 ```
+---
 
 ## 📁 Project Structure
 ```pgsql
@@ -102,7 +114,9 @@ pysantec/
 └── tests/                          # Unit tests
 ```
 
-## 🧪 Examples
+---
+
+## Examples
 
 Example scripts are available in the `examples/` directory:
 
@@ -117,21 +131,26 @@ Example scripts are available in the `examples/` directory:
 - `examples/instrument_control/mpm_control.py`
 - `examples/instrument_control/daq_control.py`
 
+---
 
-## 🎛 Supported Instruments
+## Supported Instruments
 | Instrument Type | Models                               |
 |------------------|-------------------------------------|
 | TSL (Laser)      | TSL-550, TSL-570, TSL-710, TSL-770  |
 | MPM (Power Meter) | MPM-210, MPM-210H, MPM-220         |
 | DAQ (NI)         | Compatible with NI-DAQmx            | 
 
-## ✅ Testing
+---
+
+## Testing
 
 To run the test suite:
 
 ```bash
 pytest tests/
 ```
+
+---
 
 ## 🤝 Contributing
 
@@ -143,12 +162,18 @@ We welcome contributions! To contribute:
 - Push to your fork
 - Create a Pull Request
 
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+---
+
 ## 🙏 Acknowledgments
 
 - National Instruments – for NI-VISA, NI-488.2 and NI-DAQmx support
+
+---
 
 ## 📘 Documentation is under development — contributions are welcome!

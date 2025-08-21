@@ -7,17 +7,33 @@ PySantec DLL Manager.
 
 import os
 import clr
+import platform
 from pathlib import Path
 from ..logger import get_logger
 
-
 # Get the logger
 logger = get_logger(__name__)
+
+
+class UnsupportedPlatformError(OSError):
+    """Raised when PySantec is imported on a non-Windows platform."""
+    pass
+
+
+if platform.system() != "Windows":
+    error_string = (
+        "❌ PySantec requires Windows because the Santec DLLs are built on .NET Framework. "
+        f"Current platform: {platform.system()} {platform.release()}"
+    )
+    logger.error(error_string)
+    raise UnsupportedPlatformError(error_string)
+
 
 # Define the paths for the DLLs
 # Default path where the DLLs are expected to be found
 SYSTEM_DLL_PATH = r"C:\\Program Files\\santec\\Swept Test System IL And PDL"
 APPDATA_DLL_PATH = Path(os.getenv("APPDATA")) / "santec" / "pysantec" / "dlls"
+
 
 # DLL Names
 # List of DLLs to be loaded
