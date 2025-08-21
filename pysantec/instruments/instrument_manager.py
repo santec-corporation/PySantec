@@ -24,22 +24,26 @@ class InstrumentManager:
         self._instrument_wrapper = InstrumentWrapper(self.logger)
         self._instrument: BaseInstrument | None = None
         self._connected_instruments: Dict[str, BaseInstrument] = {}
+        self._resources_listed: bool = False
         self.logger.info("Initializing Instrument Manager...")
-        self._list_resources()
 
     # region Private methods
     def _list_resources(self):
         """Lists all available resources."""
-        self.logger.info("Listing all available resources...")
-        self._resources.clear()
-        try:
-            self._list_gpib_resources()
-            self._list_usb_resources()
-            self._list_daq_resources()
+        if not self._resources_listed:
+            self.logger.info("Listing all available resources...")
+            self._resources.clear()
+            try:
+                self._list_gpib_resources()
+                self._list_usb_resources()
+                self._list_daq_resources()
 
-        except Exception as e:
-            self.logger.error(f"Error while listing resources: {e}")
-            raise Exception(f"Error while listing resources: {e}")
+                self._resources_listed = True
+
+            except Exception as e:
+                self.logger.error(f"Error while listing resources: {e}")
+                raise Exception(f"Error while listing resources: {e}")
+
 
     def _list_gpib_resources(self):
         """Lists GPIB resources."""
@@ -194,6 +198,7 @@ class InstrumentManager:
 
         :return: List of GPIB, FTDI USB & NI DAQ resources.
         """
+        self._list_resources()
         resources = self._resources
         if len(resources) < 1:
             self.logger.debug(f"No resources available: {len(resources)}")
@@ -206,6 +211,7 @@ class InstrumentManager:
         self, resource_name: str
     ) -> TSLInstrument | BaseInstrument:
         """Connects to a TSL instrument."""
+        self._list_resources()
         if not resource_name:
             raise ValueError("Resource name cannot be empty.")
         self.logger.info(f"Connecting to TSL resource: {resource_name}")
@@ -217,6 +223,7 @@ class InstrumentManager:
         self, resource_name: str
     ) -> MPMInstrument | BaseInstrument:
         """Connects to an MPM instrument."""
+        self._list_resources()
         if not resource_name:
             raise ValueError("Resource name cannot be empty.")
         self.logger.info(f"Connecting to MPM resource: {resource_name}")
@@ -226,6 +233,7 @@ class InstrumentManager:
 
     def connect_daq(self, device_name: str) -> DAQInstrument | BaseInstrument:
         """Connects to a NI DAQ device."""
+        self._list_resources()
         if not device_name:
             raise ValueError("Device name cannot be empty.")
         self.logger.info(f"Connecting to NI DAQ device: {device_name}")
