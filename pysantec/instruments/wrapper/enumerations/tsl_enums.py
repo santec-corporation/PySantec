@@ -3,7 +3,6 @@ TSL Instrument Enums.
 """
 
 from enum import Enum
-
 from ..santec_wrapper import TSL
 
 
@@ -68,3 +67,31 @@ class PowerUnit(Enum):
 
     dBm = TSL.Power_Unit.dBm
     mW = TSL.Power_Unit.mW
+
+
+class WavelengthUnit(Enum):
+    """Enum for Wavelength Units of the TSL instrument."""
+
+    nm = TSL.Wavelength_Unit.nm
+    THz = TSL.Wavelength_Unit.THz
+
+
+class PowerMode(Enum):
+    """Enum for Power mode of the TSL instrument."""
+
+    AutoCurrentControl = TSL.Power_Mode.ACC
+    AutoPowerControl = TSL.Power_Mode.APC
+
+
+class TriggerOutputSetting(Enum):
+    """Enum for Trigger output source of the TSL instrument."""
+
+    WAVELENGTH = TSL.TriggerOut_Source.Wavelength
+    TIME = TSL.TriggerOut_Source.Time
+
+
+class CoherenceControlStatus(Enum):
+    """Enum for Coherence Control Status of the TSL instrument."""
+
+    OFF = TSL.Coh_Status.Coh_OFF
+    ON = TSL.Coh_Status.Coh_ON

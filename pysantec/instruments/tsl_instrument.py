@@ -5,7 +5,8 @@ TSL instrument module.
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .wrapper import TSL
-from .wrapper.enumerations.tsl_enums import LDStatus, PowerUnit, SweepStatus, SweepStartMode
+from .wrapper.enumerations.tsl_enums import (LDStatus, PowerUnit, SweepStatus, SweepStartMode, SweepMode, WavelengthUnit, PowerMode, ShutterStatus,
+                                             TriggerOutputSetting, TriggerOutputMode, TriggerInputMode)
 
 
 class TSLInstrument(BaseInstrument):
@@ -35,6 +36,14 @@ class TSLInstrument(BaseInstrument):
         """Get the current power unit setting."""
         return self._get_function_enum("Get_Power_Unit", PowerUnit.dBm)
 
+    def get_wavelength_unit(self) -> WavelengthUnit:
+        """Get the current wavelength unit setting."""
+        return self._get_function_enum("Get_Wavelength_Unit", WavelengthUnit.nm)
+
+    def get_power_mode(self) -> PowerMode:
+        """Get the current power mode setting."""
+        return self._get_function_enum("Get_Power_Mode", PowerMode.AutoCurrentControl)
+
     def get_ld_status(self) -> LDStatus:
         """Get the current status of the laser diode."""
         return self._get_function_enum("Get_LD_Status", LDStatus.OFF)
@@ -46,6 +55,14 @@ class TSLInstrument(BaseInstrument):
     def get_sweep_status(self) -> SweepStatus:
         """Get the current sweep status of the TSL instrument."""
         return self._get_function_enum("Get_Sweep_Status", SweepStatus.PAUSE)
+
+    def get_scan_mode(self) -> SweepMode:
+        """Get the current scan mode."""
+        return self._get_function_enum("Get_Sweep_Mode", SweepMode.STEPPED_ONE_WAY)
+
+    def get_shutter_status(self) -> ShutterStatus:
+        """Get the current shutter status."""
+        return self._get_function_enum("Get_Shutter_Status", ShutterStatus.OPEN)
 
     def get_power(self) -> float:
         """Get the current power setting in dBm."""
@@ -167,6 +184,16 @@ class TSLInstrument(BaseInstrument):
         self.logger.info(f"Setting power unit to {unit.name}.")
         self._set_function_enum("Set_Power_Unit", unit)
 
+    def set_wavelength_unit(self, unit: WavelengthUnit):
+        """Set the wavelength unit for the TSL instrument."""
+        self.logger.info(f"Setting wavelength unit to {unit.name}.")
+        self._set_function_enum("Set_Wavelength_Unit", unit)
+
+    def set_power_mode(self, unit: PowerMode):
+        """Set the power mode for the TSL instrument."""
+        self.logger.info(f"Setting power mode to {unit.name}.")
+        self._set_function_enum("Set_Power_Mode", unit)
+
     def set_ld_status(self, status: LDStatus):
         """Set the laser diode status."""
         self.logger.info(f"Setting LD status to {status.name}.")
@@ -176,6 +203,37 @@ class TSLInstrument(BaseInstrument):
         """Set the scan start mode."""
         self.logger.info(f"Setting Sweep Start Mode to {mode.name}.")
         self._set_function_enum("Set_Sweep_Start_Mode", mode)
+
+    def set_trigger_output_setting(self, mode: TriggerOutputSetting):
+        """Set the trigger output setting."""
+        self.logger.info(f"Setting Trigger Output Setting to {mode.name}.")
+        self._set_function_enum("Set_TriggerOutput_Source", mode)
+
+    def set_trigger_input_mode(self, mode: TriggerInputMode):
+        """
+        Set the external trigger input setting.
+        Enables / Disables external trigger input.
+        """
+        self.logger.info(f"Setting Trigger Input Mode to {mode.name}.")
+        self._set_function_enum("Set_Input_Trigger_Mode", mode)
+
+    def set_trigger_output_mode(self, mode: TriggerOutputMode):
+        """
+        Set the trigger output setting.
+        Sets the timing of the trigger signal output.
+        """
+        self.logger.info(f"Setting Trigger Output Mode to {mode.name}.")
+        self._set_function_enum("Set_Trigger_Output_Mode", mode)
+
+    def set_scan_mode(self, mode: SweepMode):
+        """Set the scan mode."""
+        self.logger.info(f"Setting Sweep Mode to {mode.name}.")
+        self._set_function_enum("Set_Sweep_Mode", mode)
+
+    def set_shutter_status(self, mode: ShutterStatus):
+        """Set the shutter status."""
+        self.logger.info(f"Setting Shutter Status to {mode.name}.")
+        self._set_function_enum("Set_Shutter_Status", mode)
 
     def set_power(self, value: float):
         """Set the power in dBm."""
