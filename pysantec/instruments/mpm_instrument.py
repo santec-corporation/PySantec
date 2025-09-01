@@ -243,7 +243,10 @@ class MPMInstrument(BaseInstrument):
         self._set_function("Set_Sweep_Speed", speed)
 
     def set_logging_data_point(self, data_points: int):
-        """Set the number of logging data points for the MPM instrument."""
+        """
+        Set the number of logging data points for the MPM instrument.
+        Do not set this when using SWEEP2/CONST2 measurement modes.
+        """
         self.logger.info(f"Setting logging data points to: {data_points}")
         if data_points < 1:
             self.logger.error(
