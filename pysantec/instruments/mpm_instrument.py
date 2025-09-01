@@ -103,12 +103,23 @@ class MPMInstrument(BaseInstrument):
         self, module_number: int, channel_number: int
     ):
         """Get the logging data for a specific channel in a module."""
-        return self._set_and_get_function(
-            "Get_Each_Channel_Logdata",
-            module_number,
-            channel_number,
-            response_type=None,
-        )
+        self.logger.info(f"Fetching channel logging data for "
+                         f"module: {module_number} and chanel: {channel_number}.")
+        try:
+            data = self._set_and_get_function(
+                "Get_Each_Channel_Logdata",
+                module_number,
+                channel_number,
+                response_type=None,
+            )
+            if data is None or len(data) == 0:
+                self.logger.info("Data is empty. Could not fetch any logging data.")
+                return []
+            self.logger.info(f"Logging data length: {len(data)}")
+        except Exception as e:
+            self.logger.error(f"Error while fetching channel logging data: {e}")
+            raise Exception(f"Error while fetching channel logging data: {e}")
+        return list(data)
 
     # endregion
 
