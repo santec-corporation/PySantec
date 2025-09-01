@@ -95,9 +95,39 @@ class MPMInstrument(BaseInstrument):
 
     def get_module_logging_data(self, module_number: int):
         """Get the logging data for a specific module."""
-        return self._set_and_get_function(
-            "Get_Each_Module_Loggdata", module_number, response_type=None
-        )
+        self.logger.info(f"Fetching module logging data for "
+                         f"module: {module_number}.")
+
+        try:
+            data = self._set_and_get_function(
+            "Get_Each_Module_Loggdata",
+                module_number,
+                response_type=None
+            )
+            if data is None or len(data) == 0:
+                self.logger.info("Data is empty. Could not fetch any logging data.")
+                return []
+            self.logger.info(f"Logging data length: {len(data)}")
+
+        except Exception as e:
+            error_string = f"Error while fetching module logging data: {e}"
+            self.logger.error(error_string)
+            raise Exception(error_string)
+
+        # Get number of rows and columns
+        rows = data.GetLength(0)
+        cols = data.GetLength(1)
+
+        # Convert to a list of lists
+        result = []
+        for i in range(rows):
+            row = []
+            for j in range(cols):
+                row.append(data[i, j])
+            result.append(row)
+
+        self.logger.info(f"Module logging data result: {len(result)}")
+        return list(result)
 
     def get_channel_logging_data(
         self, module_number: int, channel_number: int
@@ -105,6 +135,7 @@ class MPMInstrument(BaseInstrument):
         """Get the logging data for a specific channel in a module."""
         self.logger.info(f"Fetching channel logging data for "
                          f"module: {module_number} and chanel: {channel_number}.")
+
         try:
             data = self._set_and_get_function(
                 "Get_Each_Channel_Logdata",
@@ -116,9 +147,12 @@ class MPMInstrument(BaseInstrument):
                 self.logger.info("Data is empty. Could not fetch any logging data.")
                 return []
             self.logger.info(f"Logging data length: {len(data)}")
+
         except Exception as e:
-            self.logger.error(f"Error while fetching channel logging data: {e}")
-            raise Exception(f"Error while fetching channel logging data: {e}")
+            error_string = f"Error while fetching channel logging data: {e}"
+            self.logger.error(error_string)
+            raise Exception(error_string)
+
         return list(data)
 
     # endregion
