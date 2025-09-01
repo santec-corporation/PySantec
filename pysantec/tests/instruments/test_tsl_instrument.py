@@ -180,7 +180,7 @@ def test_system_error(tsl):
 @pytest.mark.parametrize("speed,step_wavelength", [(0.5, 0.1), (1.0, 0.05)])
 def test_power_monitor_data(tsl, speed, step_wavelength):
     """Test the power monitor data retrieval functionality."""
-    data_points, data = tsl.get_power_monitor_data(speed, step_wavelength)
+    data_points, data = tsl.get_power_logging_data(speed, step_wavelength)
     print(f"Power monitor data points: {data_points}")
     assert data_points >= 0
     if data_points > 0:

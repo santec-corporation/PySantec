@@ -66,41 +66,97 @@ class TSLInstrument(BaseInstrument):
     # region Logging Data Related methods
     def get_logging_data_points(self) -> int:
         """Get the number of data points available in the logging data."""
+        self.logger.info("Fetch logging data points.")
         data_points = self.query(":READ:POIN?")
+
         if data_points is None:
-            self.logger.error("Failed to retrieve data points.")
+            self.logger.error(f"Failed to retrieve data points."
+                              f" Status: {self._status}")
             return 0
+
         data_points = int(data_points)
         self.logger.info(f"Retrieved data points: {data_points}")
+
         return data_points
+
+    def _fetch_logging_data(self, fetch_func, *args, **kwargs):
+        """Generic helper to fetch logging data with a scan lifecycle."""
+        self.tsl_busy_check(2)  # Ensure TSL is not busy
+
+        data_points = self.get_logging_data_points()
+
+        if data_points <= 0:
+            self.logger.error("No data points found.")
+            return 0, None
+
+        self.tsl_busy_check(2)  # Ensure TSL is not busy
+
+        # Set the TSL start scan mode to waiting for trigger
+        self.set_scan_start_mode(SweepStartMode.WAITING_FOR_TRIGGER)
+        self.start_scan()
+
+        try:
+            result = fetch_func(*args, **kwargs)
+        finally:
+            self.stop_scan()    # Stop TSL process
+            pass
+
+        if not result or any(r is None for r in result if r is not None):
+            self.logger.error("Failed to retrieve logging data.")
+            return 0, None
+
+        return result
 
     def get_wavelength_logging_data(self):
         """Get the wavelength logging data."""
-        data_points, data = self._get_multiple_responses(
-            "Get_Logging_Data", int, None
-        )
-        if data_points is None or data is None:
-            self.logger.error("Failed to retrieve wavelength logging data.")
-            return 0, None
-        self.logger.info(f"Retrieved {data_points} wavelength data points.")
-        return data_points, data
+        self.logger.info("Fetch the wavelength logging data.")
 
-    def get_power_monitor_data(self, speed: float, step_wavelength: float):
-        """Get the power monitor data for the TSL instrument."""
-        data_points, data = self._set_and_get_multiple_responses(
+        result = self._fetch_logging_data(
+            self._get_multiple_responses, "Get_Logging_Data", int, None
+        )
+
+        data_points, data = result if len(result) == 2 else (-1, *result[1:])
+
+        if data_points:
+            self.logger.info(
+                f"Retrieved wavelength data points: {data_points}."
+                f" Status: {self.status}")
+
+        return data
+
+    def get_power_logging_data(self, speed: float = None,
+                               step_wavelength: float = None):
+        """
+        Get the power monitor data.
+
+        Speed in nm/sec.
+        Step wavelength in nm.
+        """
+        self.logger.info(f"Fetch power logging data.")
+
+        if not speed:
+            speed = self.get_speed()
+
+        if not step_wavelength:
+            step_wavelength = self.get_step_wavelength()
+
+        self.logger.info(f"Speed value: {speed}. Step wavelength: {step_wavelength}")
+
+        result = self._fetch_logging_data(
+            self._set_and_get_multiple_responses,
             "Get_Logging_Data_Power_for_STS",
             int,
             None,
             speed,
             step_wavelength,
         )
-        if data_points is None or data is None:
-            self.logger.error("Failed to retrieve power monitor data.")
-            return 0, None
-        self.logger.info(
-            f"Retrieved {data_points} power monitor data points."
-        )
-        return data_points, data
+        data_points, data =  result if len(result) == 2 else (-1, *result[1:])
+
+        if data_points:
+            self.logger.info(f"Retrieved power logging data points: {data_points}."
+                             f" Status: {self.status}")
+
+        return list(data)
 
     # endregion
     # endregion
