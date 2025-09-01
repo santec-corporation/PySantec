@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pysantec/tests/instruments/test_mpm_instrument.py
 
 """

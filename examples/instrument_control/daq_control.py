@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 DAQ instrument control example.
 

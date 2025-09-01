@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pysantec/tests/test_setup_dlls.py
 
 """

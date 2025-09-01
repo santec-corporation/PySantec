@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 TSL instrument control example.
 
