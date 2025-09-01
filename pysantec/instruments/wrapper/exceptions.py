@@ -2,6 +2,34 @@
 This module defines custom exceptions for the Pysantec library.
 """
 
+from enum import IntEnum
+
+
+class InstrumentExceptionCode(IntEnum):
+    Unknown = -2**31     # int.MinValue in C#
+    InUseError = -40
+    ParameterError = -30
+    DeviceError = -20
+    CommunicationFailure = -14
+    UnauthorizedAccess = -13
+    IOException = -12
+    NotConnected = -11
+    Uninitialized = -10
+    TimeOut = -2
+    Failure = -1
+    CountMismatch = -5
+    MonitorError = -6
+    Succeed = 0
+    AlreadyConnected = 11
+    Stopped = 10
+
+
+def to_instrument_exception_code(status: int) -> InstrumentExceptionCode:
+        try:
+            return InstrumentExceptionCode(status)
+        except ValueError:
+            return InstrumentExceptionCode.Unknown
+
 
 class PysantecError(Exception):
     """Base exception for all Pysantec errors."""

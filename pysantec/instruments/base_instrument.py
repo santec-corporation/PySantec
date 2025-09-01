@@ -3,8 +3,7 @@ Base instrument module.
 """
 
 import inspect
-
-from .wrapper import MPM, TSL, InstrumentWrapper
+from .wrapper import MPM, TSL, InstrumentWrapper, InstrumentExceptionCode, to_instrument_exception_code
 
 
 class BaseInstrument:
@@ -12,6 +11,7 @@ class BaseInstrument:
 
     def __init__(self):
         self._instrument = None
+        self._status = None
 
     def instrument(self, wrapper_type: InstrumentWrapper):
         """Set the instrument wrapper type."""
@@ -29,7 +29,14 @@ class BaseInstrument:
                 f"is not allowed to use method '{caller_frame}'."
             )
 
-    def query(self, command: str) -> tuple[int, str]:
+    @property
+    def status(self) -> str:
+        """Returns the current instrument status string."""
+        if self._status is not None:
+            return self._status.name
+        return InstrumentExceptionCode.Unknown.name
+
+    def query(self, command: str) -> str:
         """Send a query command to the instrument
         and return the status and response."""
         """This method is restricted to TSL and MPM instruments."""
@@ -37,35 +44,37 @@ class BaseInstrument:
         command = command.upper()
         try:
             status, response = self._instrument.Echo(command, "")
-            return status, response
+            self._status = to_instrument_exception_code(status)
+            return response
         except Exception as e:
             raise RuntimeError(f"Error while querying command {command}: {e}")
 
-    def write(self, command: str) -> int:
+    def write(self, command: str) -> None:
         """Send a write command to the instrument and return the status."""
         """This method is restricted to TSL and MPM instruments."""
         self._check_restricted_method()
         command = command.upper()
         try:
             status = self._instrument.Write(command)
-            return status
+            self._status = to_instrument_exception_code(status)
         except Exception as e:
             raise RuntimeError(f"Error while writing command {command}: {e}")
 
-    def read(self) -> tuple[int, str]:
+    def read(self) -> str:
         """Read data from the instrument and return the status and response."""
         """This method is restricted to TSL and MPM instruments."""
         self._check_restricted_method()
         try:
             status, response = self._instrument.Read("")
-            return status, response
+            self._status = to_instrument_exception_code(status)
+            return response
         except Exception as e:
             raise RuntimeError(f"Error while reading instrument: {e}")
 
     @property
     def idn(self):
         """Return the identification string of the instrument."""
-        _, idn = self.query("*IDN?")
+        idn = self.query("*IDN?")
         return idn
 
     @property
@@ -85,7 +94,8 @@ class BaseInstrument:
 
     def _get_response(self, function_name, *args):
         """Get a response from the instrument for a given function."""
-        _, response = getattr(self._instrument, function_name)(*args)
+        error_code, response = getattr(self._instrument, function_name)(*args)
+        self._status = to_instrument_exception_code(error_code)
         return response
 
     def _get_multiple_responses(
@@ -94,9 +104,10 @@ class BaseInstrument:
         """Get multiple responses from the instrument for a given function."""
         response_1 = self._init_response(response_type_1)
         response_2 = self._init_response(response_type_2)
-        _, response_1, response_2 = getattr(self._instrument, function_name)(
+        error_code, response_1, response_2 = getattr(self._instrument, function_name)(
             response_1, response_2
         )
+        self._status = to_instrument_exception_code(error_code)
         return response_1, response_2
 
     def _set_and_get_multiple_responses(
@@ -106,9 +117,10 @@ class BaseInstrument:
         from the instrument for a given function."""
         response_1 = self._init_response(response_type_1)
         response_2 = self._init_response(response_type_2)
-        _, response_1, response_2 = getattr(self._instrument, function_name)(
+        error_code, response_1, response_2 = getattr(self._instrument, function_name)(
             *args, response_1, response_2
         )
+        self._status = to_instrument_exception_code(error_code)
         return response_1, response_2
 
     def _get_function(self, function_name, response_type):
@@ -118,7 +130,8 @@ class BaseInstrument:
 
     def _set_function(self, function_name, *args):
         """Set values on the instrument for a given function."""
-        getattr(self._instrument, function_name)(*args)
+        error_code = getattr(self._instrument, function_name)(*args)
+        self._status = to_instrument_exception_code(error_code)
 
     def _set_and_get_function(self, function_name, *args, response_type=-1):
         """Set values and get a response
@@ -137,21 +150,25 @@ class BaseInstrument:
         """Get an enum value from the instrument for a given function."""
         self._check_restricted_method()
         enum_value = function_enum_name.value
-        _, enum_value = getattr(self._instrument, function_name)(enum_value)
+        error_code, enum_value = getattr(self._instrument, function_name)(enum_value)
+        self._status = to_instrument_exception_code(error_code)
         return function_enum_name.__class__(enum_value)
 
     def _set_function_enum(self, function_name, function_enum_name):
         """Set an enum value on the instrument for a given function."""
         self._check_restricted_method()
-        _ = getattr(self._instrument, function_name)(function_enum_name.value)
+        error_code = getattr(self._instrument, function_name)(function_enum_name.value)
+        self._status = to_instrument_exception_code(error_code)
 
     def _set_and_get_function_enum(self, function_name, enum_type, *args):
         """Set values and get an enum value
         from the instrument for a given function."""
         self._check_restricted_method()
-        _, enum_value = getattr(self._instrument, function_name)(*args)
+        error_code, enum_value = getattr(self._instrument, function_name)(*args)
+        self._status = to_instrument_exception_code(error_code)
         return enum_type(enum_value)
 
     def disconnect(self):
         """Disconnect the instrument."""
-        _ = self._instrument.DisConnect()
+        error_code = self._instrument.DisConnect()
+        self._status = to_instrument_exception_code(error_code)

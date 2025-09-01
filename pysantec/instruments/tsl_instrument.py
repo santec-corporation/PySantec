@@ -54,7 +54,7 @@ class TSLInstrument(BaseInstrument):
     # region Logging Data Related methods
     def get_logging_data_points(self) -> int:
         """Get the number of data points available in the logging data."""
-        _, data_points = self.query(":READ:POIN?")
+        data_points = self.query(":READ:POIN?")
         if data_points is None:
             self.logger.error("Failed to retrieve data points.")
             return 0
