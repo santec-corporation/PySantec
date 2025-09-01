@@ -5,7 +5,7 @@ TSL instrument module.
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .wrapper import TSL
-from .wrapper.enumerations.tsl_enums import LDStatus, PowerUnit, SweepStatus
+from .wrapper.enumerations.tsl_enums import LDStatus, PowerUnit, SweepStatus, SweepStartMode
 
 
 class TSLInstrument(BaseInstrument):
@@ -39,6 +39,10 @@ class TSLInstrument(BaseInstrument):
         """Get the current status of the laser diode."""
         return self._get_function_enum("Get_LD_Status", LDStatus.OFF)
 
+    def get_scan_start_mode(self) -> SweepStartMode:
+        """Get the current scan start mode."""
+        return self._get_function_enum("Get_Sweep_Start_Mode", SweepStartMode.NORMAL)
+
     def get_sweep_status(self) -> SweepStatus:
         """Get the current sweep status of the TSL instrument."""
         return self._get_function_enum("Get_Sweep_Status", SweepStatus.PAUSE)
@@ -50,6 +54,14 @@ class TSLInstrument(BaseInstrument):
     def get_wavelength(self) -> float:
         """Get the current wavelength setting in nm."""
         return self._get_function("Get_Wavelength", float)
+
+    def get_speed(self) -> float:
+        """Get the current speed setting in nm/sec."""
+        return self._get_function("Get_Sweep_Speed", float)
+
+    def get_step_wavelength(self) -> float:
+        """Get the current step wavelength setting in nm."""
+        return self._get_function("Get_Wavelength_Step", float)
 
     # region Logging Data Related methods
     def get_logging_data_points(self) -> int:
@@ -104,6 +116,11 @@ class TSLInstrument(BaseInstrument):
         self.logger.info(f"Setting LD status to {status.name}.")
         self._set_function_enum("Set_LD_Status", status)
 
+    def set_scan_start_mode(self, mode: SweepStartMode):
+        """Set the scan start mode."""
+        self.logger.info(f"Setting Sweep Start Mode to {mode.name}.")
+        self._set_function_enum("Set_Sweep_Start_Mode", mode)
+
     def set_power(self, value: float):
         """Set the power in dBm."""
         self.logger.info(f"Setting power to {value} dBm.")
@@ -113,6 +130,16 @@ class TSLInstrument(BaseInstrument):
         """Set the wavelength in nm."""
         self.logger.info(f"Setting wavelength to {value} nm.")
         self._set_function("Set_Wavelength", value)
+
+    def set_speed(self, value: float):
+        """Set the speed in nm/sec."""
+        self.logger.info(f"Setting speed to {value} nm/sec.")
+        self._set_function("Set_Sweep_Speed", value)
+
+    def set_step_wavelength(self, value: float):
+        """Set the step wavelength in nm."""
+        self.logger.info(f"Setting step wavelength to {value} nm.")
+        self._set_function("Set_Wavelength_Step", value)
 
     # region Scan Related methods
     def set_scan_parameters(
