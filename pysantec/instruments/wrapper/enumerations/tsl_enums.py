@@ -95,3 +95,12 @@ class CoherenceControlStatus(Enum):
 
     OFF = TSL.Coh_Status.Coh_OFF
     ON = TSL.Coh_Status.Coh_ON
+
+
+class GPIBDelimiter(Enum):
+    """Enum for GPIB Command Delimiter of the TSL instrument."""
+
+    CR = 0
+    LF = 1
+    CRLF = 2
+    NONE = 3

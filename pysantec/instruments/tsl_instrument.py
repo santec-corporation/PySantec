@@ -5,7 +5,8 @@ TSL instrument module.
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .wrapper import TSL
-from .wrapper.enumerations.tsl_enums import (LDStatus, PowerUnit, SweepStatus, SweepStartMode, SweepMode, WavelengthUnit, PowerMode, ShutterStatus,
+from .wrapper.enumerations.tsl_enums import (LDStatus, PowerUnit, SweepStatus, SweepStartMode, SweepMode,
+                                             WavelengthUnit, PowerMode, ShutterStatus, GPIBDelimiter,
                                              TriggerOutputSetting, TriggerOutputMode, TriggerInputMode)
 
 
@@ -330,3 +331,31 @@ class TSLInstrument(BaseInstrument):
         )
         # This function will wait for the TSL instrument to become available
         self._set_function("TSL_Busy_Check", wait_time)
+
+    def status_clear(self):
+        """Status clear."""
+        self.write('*CLS')  # Status Clear
+
+    def device_reset(self):
+        """Device reset."""
+        self.write('*RST')  # Device Reset
+
+    def operation_query(self):
+        """Queries the completion of operation."""
+        return self.query('*OPC?')
+
+    def set_command_mode(self, is_scpi: bool = False):
+        """Sets command mode to Legacy / SCPI."""
+        if is_scpi:
+            self.logger.info(f"Setting command mode to SCPI.")
+            self.write('SYST:COMM:COD 1')  # Sets the command set to SCPI.
+        else:
+            self.logger.info(f"Setting command mode to Legacy.")
+            self.write('SYST:COMM:COD 0')  # Sets the command set to Legacy.
+
+    def set_gpib_command_delimiter(self, delimiter: GPIBDelimiter):
+        """Sets the GPIB command delimiter."""
+        delimiter_value = delimiter.value
+        self.logger.info(f"Setting GPIB command delimiter to {delimiter}.")
+        self.write(f'SYST:COMM:GPIB:DEL {delimiter_value}')
+
