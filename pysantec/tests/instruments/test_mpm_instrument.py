@@ -174,8 +174,8 @@ def test_channel_range(mpm, module_number, channel_number, range_value):
 @pytest.mark.parametrize("speed", [0.1, 0.5, 1.0, 2.0, 5.0])
 def test_sweep_speed(mpm, speed):
     """Test setting and getting sweep speed."""
-    mpm.set_sweep_speed(speed)
-    get_speed = mpm.get_sweep_speed()
+    mpm.set_scan_speed(speed)
+    get_speed = mpm.get_scan_speed()
     print(f"Set Sweep Speed: {speed}, Get: {get_speed}")
     assert get_speed == speed
 

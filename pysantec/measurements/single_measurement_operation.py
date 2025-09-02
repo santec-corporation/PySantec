@@ -138,7 +138,7 @@ class SME:
         self.logger.info(f"Performing Scan. Display logging status: {display_logging_status}.")
 
         # Set TSL scan status to waiting for trigger
-        self.laser.set_scan_start_mode(tsl_enums.SweepStartMode.WAITING_FOR_TRIGGER)
+        self.laser.set_scan_start_mode(tsl_enums.ScanStartMode.WAITING_FOR_TRIGGER)
 
         print("\nStarting the SME process....\n")
 
@@ -149,10 +149,10 @@ class SME:
         self.laser.start_scan()
 
         # Check TSL status and force set TSL to start scan if not started
-        scan_status = self.laser.get_sweep_status()
-        while scan_status != tsl_enums.SweepStatus.STANDING_BY_TRIGGER:
+        scan_status = self.laser.get_scan_status()
+        while scan_status != tsl_enums.ScanStatus.STANDING_BY_TRIGGER:
             self.laser.start_scan()
-            scan_status = self.laser.get_sweep_status()
+            scan_status = self.laser.get_scan_status()
             time.sleep(0.2)
 
         # Issue software trigger to the TSL

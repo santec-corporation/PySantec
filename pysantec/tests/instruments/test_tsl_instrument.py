@@ -11,7 +11,7 @@ import pytest
 import pysantec
 from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
                                                                  PowerUnit,
-                                                                 SweepStatus)
+                                                                 ScanStatus)
 
 # Define the resource name for the TSL instrument
 TSL_RESOURCE_NAME = "GPIB1::3::INSTR"
@@ -75,14 +75,14 @@ def test_power_unit(tsl, unit):
 
 def test_get_sweep_status(tsl):
     """Test the sweep status retrieval of the TSL instrument."""
-    sweep_status = tsl.get_sweep_status()
+    sweep_status = tsl.get_scan_status()
     print(f"Sweep Status: {sweep_status}")
     assert sweep_status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
-        SweepStatus.STANDING_BY_TRIGGER,
-        SweepStatus.PREPARATION_FOR_SWEEP_START,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
+        ScanStatus.STANDING_BY_TRIGGER,
+        ScanStatus.PREPARATION_FOR_SWEEP_START,
     ]
 
 
@@ -141,31 +141,31 @@ def test_scan_parameters(tsl, scan_params):
 
 @pytest.mark.parametrize(
     "wait_time,expected_status",
-    [(1, SweepStatus.STANDBY), (2, SweepStatus.RUNNING)],
+    [(1, ScanStatus.STANDBY), (2, ScanStatus.RUNNING)],
 )
 def test_wait_for_sweep_status(tsl, wait_time, expected_status):
     """Test waiting for a specific sweep status."""
-    tsl.wait_for_sweep_status(wait_time, expected_status)
-    status = tsl.get_sweep_status()
+    tsl.wait_for_scan_status(wait_time, expected_status)
+    status = tsl.get_scan_status()
     print(
         f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}"
     )
     assert status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
     ]
 
 
 def test_tsl_busy_check(tsl):
     """Test the TSL busy check functionality."""
     tsl.tsl_busy_check(1)
-    status = tsl.get_sweep_status()
+    status = tsl.get_scan_status()
     print(f"Status after busy check: {status}")
     assert status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
     ]
 
 

@@ -20,8 +20,8 @@ class ShutterStatus(Enum):
     CLOSE = TSL.Shutter_Status.Shutter_Close
 
 
-class SweepMode(Enum):
-    """Enum for Sweep Modes of the TSL instrument."""
+class ScanMode(Enum):
+    """Enum for Scan Modes of the TSL instrument."""
 
     STEPPED_ONE_WAY = TSL.Sweep_Mode.Step_Oneway
     CONTINUOUS_ONE_WAY = TSL.Sweep_Mode.Continuous_Oneway
@@ -29,8 +29,8 @@ class SweepMode(Enum):
     CONTINUOUS_TWO_WAY = TSL.Sweep_Mode.Continuous_Twoway
 
 
-class SweepStatus(Enum):
-    """Enum for Sweep Status of the TSL instrument."""
+class ScanStatus(Enum):
+    """Enum for Scan Status of the TSL instrument."""
 
     STANDBY = TSL.Sweep_Status.Standby
     RUNNING = TSL.Sweep_Status.Running
@@ -55,8 +55,8 @@ class TriggerInputMode(Enum):
     ENABLE = TSL.Trigger_Input_Mode.Enable
 
 
-class SweepStartMode(Enum):
-    """Enum for Sweep Start Modes of the TSL instrument."""
+class ScanStartMode(Enum):
+    """Enum for Scan Start Modes of the TSL instrument."""
 
     NORMAL = TSL.Sweep_Start_Mode.Normal
     WAITING_FOR_TRIGGER = TSL.Sweep_Start_Mode.WaitingforTrigger

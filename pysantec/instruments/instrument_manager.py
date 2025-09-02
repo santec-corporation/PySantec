@@ -3,7 +3,6 @@ Instrument Manager module.
 """
 
 from typing import Dict
-
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .daq_instrument import DAQInstrument
@@ -41,17 +40,19 @@ class InstrumentManager:
                 self._resources_listed = True
 
             except Exception as e:
-                self.logger.error(f"Error while listing resources: {e}")
-                raise Exception(f"Error while listing resources: {e}")
-
+                error_string = f"Error while listing resources: {e}"
+                self.logger.error(error_string)
+                raise Exception(error_string)
 
     def _list_gpib_resources(self):
         """Lists GPIB resources."""
         self.logger.info("Listing VISA GPIB resources...")
+
         try:
             gpib_resources = self._instrument_wrapper.get_gpib_resources()
             if gpib_resources:
                 self._resources.extend(gpib_resources)
+
         except Exception as e:
             self.logger.error(f"Error listing VISA GPIB resources: {e}")
 
