@@ -47,7 +47,7 @@ See [`sme_operation/README.md`](sme_operation/README.md) for full examples.
 ## Requirements
 
 - Platform: Windows 10+
-- Python version 3.7+
+- Python version 3.10+
 - `pysantec` package installed
 - Santec DLLs properly set up
 - [NI-488.2](https://www.ni.com/en-us/support/downloads/drivers/download.ni-488-2.html) for GPIB devices

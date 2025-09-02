@@ -45,7 +45,7 @@ pip install pythonnet
 ### Platform & Requirements
 
 - OS: Windows 10+ 
-- Python: 3.7+
+- Python: 3.10+
 - Santec DLLs: Installed via Santec Swept Test System (IL/PDL) software.
 - Download the latest version of the STS IL/PDL software [here](https://downloads.santec.com/api/download/ce94afc6-f283-4123-bf7b-3db322540c2b).
 - .NET: Framework 4.5.2+ (as required by Santec DLLs)
