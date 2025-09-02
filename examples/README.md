@@ -28,6 +28,22 @@ See [`instrument_control/README.md`](instrument_control/README.md) for full exam
 
 ---
 
+## Instrument Logging
+
+Demonstrates how to fetch the logging data of a TSL and MPM.
+
+See [`instrument_logging/README.md`](instrument_logging/README.md) for full examples.
+
+---
+
+## SME Operation
+
+Demonstrates how to perform an SME mode operation using the TSL and MPM instruments.
+
+See [`sme_operation/README.md`](sme_operation/README.md) for full examples.
+
+---
+
 ## Requirements
 
 - Platform: Windows 10+

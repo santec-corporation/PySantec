@@ -123,12 +123,26 @@ Example scripts are available in the `examples/` directory:
 
 - `examples/basic_usage/list_resources.py`
 - `examples/basic_usage/connect_instruments.py`
+- `examples/basic_usage/tcpip_connect.py`
 
 ### 🔹 Instrument Control
 
 - `examples/instrument_control/tsl_control.py`
 - `examples/instrument_control/mpm_control.py`
 - `examples/instrument_control/daq_control.py`
+
+### 🔹 Instrument Logging
+
+- `examples/instrument_logging/print_tsl_wavelength_logging_data.py`
+- `examples/instrument_logging/print_tsl_power_logging_data.py`
+- `examples/instrument_logging/print_mpm_channel_logging_data.py`
+- `examples/instrument_logging/print_mpm_module_logging_data.py`
+
+### 🔹 SME Operation
+
+- `examples/sme_operation/sme_operation.py`
+
+For more information, read [Examples](examples/README.md).
 
 ---
 
