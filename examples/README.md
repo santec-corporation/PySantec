@@ -10,6 +10,7 @@ Covers initial setup and connection:
 
 - Listing available GPIB, USB, and NI DAQ resources
 - Establishing connections to TSL (laser), MPM (power meter), and DAQ devices
+- Connect to an instrument via Ethernet / LAN
 
 See [`basic_usage/README.md`](basic_usage/README.md) for full instructions.
 

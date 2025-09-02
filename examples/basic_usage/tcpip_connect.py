@@ -1,7 +1,7 @@
 """
 TCPIP connection example.
 
-- Connect to a TSL instrument via TCPIP / LAN.
+- Connect to a TSL instrument via Ethernet / LAN.
 """
 
 # Import pysantec package

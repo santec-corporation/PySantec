@@ -24,6 +24,7 @@ resources = instrument_manager.list_resources()
 print(resources)
 ```
 
+---
 
 ### 2. Connect Instruments — `connect_instruments.py`
 
@@ -43,6 +44,29 @@ instrument_manager = pysantec.InstrumentManager()
 tsl = instrument_manager.connect_tsl('GPIB1::3::INSTR')
 mpm = instrument_manager.connect_mpm('GPIB1::17::INSTR')
 daq = instrument_manager.connect_daq('Dev1')
+```
+
+---
+
+### 3. TCPIP — `tcpip_connect.py`
+
+Shows how to establish connections using Ethernet / LAN:
+
+- Connect to a TSL using a TCPIP resource
+
+Get basic instrument information (IDN)
+
+#### 💡 Example Code
+```python
+import pysantec
+
+# Define the resource details
+ip_address = "192.168.10.101"
+port_number = "5000"
+tcpip_resource_address = f"TCPIP::{ip_address}::{port_number}::SOCKET"
+
+# Connect to the instrument
+tsl = instrument_manager.connect_tsl(tcpip_resource_address)
 ```
 
 ### ⚙️ Usage Steps
@@ -65,6 +89,12 @@ Run the connection example:
 python connect_instruments.py
 ```
 
+Run the tcpip connect example:
+
+```bash
+python tcpip_connect.py
+```
+
 ### Resource Name Formats
 
 | Type    | Format Example                                    |
@@ -72,6 +102,5 @@ python connect_instruments.py
 | GPIB    | `GPIBx::address::INSTR` (e.g., `GPIB1::3::INSTR`) |
 | TCP/IP  | `TCPIPx::ip_address::port::SOCKET`                |
 | NI DAQ  | `Devx` (e.g., `Dev1`)                             |
-
 
 ---
