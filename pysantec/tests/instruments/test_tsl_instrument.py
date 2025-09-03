@@ -5,9 +5,7 @@ TSL instrument tests.
 """
 
 import time
-
 import pytest
-
 import pysantec
 from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
                                                                  PowerUnit,

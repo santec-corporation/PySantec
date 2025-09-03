@@ -5,9 +5,7 @@ DAQ instrument tests.
 """
 
 import time
-
 import pytest
-
 import pysantec
 
 # This is a pytest fixture that sets up the DAQ instrument for testing.

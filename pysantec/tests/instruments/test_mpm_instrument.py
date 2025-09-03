@@ -5,9 +5,7 @@ MPM instrument tests.
 """
 
 import time
-
 import pytest
-
 import pysantec
 from pysantec.instruments.wrapper.enumerations.mpm_enums import (
     LoggingStatus, MeasurementMode, PowerUnit, RangeMode, TriggerInputMode)
