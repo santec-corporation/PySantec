@@ -17,6 +17,7 @@ logger = get_logger(__name__)
 
 class UnsupportedPlatformError(OSError):
     """Raised when PySantec is imported on a non-Windows platform."""
+
     pass
 
 

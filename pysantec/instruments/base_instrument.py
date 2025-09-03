@@ -3,7 +3,13 @@ Base instrument module.
 """
 
 import inspect
-from .wrapper import MPM, TSL, InstrumentWrapper, InstrumentExceptionCode, to_instrument_exception_code
+from .wrapper import (
+    MPM,
+    TSL,
+    InstrumentWrapper,
+    InstrumentExceptionCode,
+    to_instrument_exception_code,
+)
 from ..logger import get_logger
 
 
@@ -26,8 +32,10 @@ class BaseInstrument:
         if not isinstance(self._instrument, (TSL, MPM)):
             stack = inspect.stack()
             caller_frame = stack[1].function
-            error_string = (f"{self._instrument.__class__.__name__} "
-                            f"is not allowed to use method '{caller_frame}'.")
+            error_string = (
+                f"{self._instrument.__class__.__name__} "
+                f"is not allowed to use method '{caller_frame}'."
+            )
             self.logger.error(error_string)
             raise PermissionError(error_string)
 
@@ -136,9 +144,7 @@ class BaseInstrument:
         self.__status = to_instrument_exception_code(error_code)
         return response
 
-    def _get_multiple_responses(
-        self, function_name, response_type_1, response_type_2
-    ):
+    def _get_multiple_responses(self, function_name, response_type_1, response_type_2):
         """Get multiple responses from the instrument for a given function."""
         response_1 = self._init_response(response_type_1)
         response_2 = self._init_response(response_type_2)

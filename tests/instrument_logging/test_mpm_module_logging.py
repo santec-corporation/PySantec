@@ -43,7 +43,11 @@ def test_mpm_module_logging_data(mpm: MPMInstrument):
     assert len(result) > 0, "Expected non-empty result from module logging data"
 
     first_channel_data = result[0]
-    assert isinstance(first_channel_data, (list, tuple)), "Channel data must be list or tuple"
+    assert isinstance(
+        first_channel_data, (list, tuple)
+    ), "Channel data must be list or tuple"
     assert len(first_channel_data) > 0, "Expected at least one data point in channel"
 
-    assert len(first_channel_data) == count, "Data length should match logging data points"
+    assert (
+        len(first_channel_data) == count
+    ), "Data length should match logging data points"

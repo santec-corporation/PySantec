@@ -6,7 +6,7 @@ from enum import IntEnum
 
 
 class InstrumentExceptionCode(IntEnum):
-    Unknown = -2**31     # int.MinValue in C#
+    Unknown = -(2**31)  # int.MinValue in C#
     InUseError = -40
     ParameterError = -30
     DeviceError = -20
@@ -25,10 +25,10 @@ class InstrumentExceptionCode(IntEnum):
 
 
 def to_instrument_exception_code(status: int) -> InstrumentExceptionCode:
-        try:
-            return InstrumentExceptionCode(status)
-        except ValueError:
-            return InstrumentExceptionCode.Unknown
+    try:
+        return InstrumentExceptionCode(status)
+    except ValueError:
+        return InstrumentExceptionCode.Unknown
 
 
 class PysantecError(Exception):

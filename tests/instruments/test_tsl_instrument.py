@@ -7,9 +7,11 @@ TSL instrument tests.
 import time
 import pytest
 import pysantec
-from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
-                                                                 PowerUnit,
-                                                                 ScanStatus)
+from pysantec.instruments.wrapper.enumerations.tsl_enums import (
+    LDStatus,
+    PowerUnit,
+    ScanStatus,
+)
 
 # Define the resource name for the TSL instrument
 TSL_RESOURCE_NAME = "GPIB2::3::INSTR"
@@ -147,9 +149,7 @@ def test_wait_for_sweep_status(tsl, wait_time, expected_status):
     """Test waiting for a specific sweep status."""
     tsl.wait_for_scan_status(wait_time, expected_status)
     status = tsl.get_scan_status()
-    print(
-        f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}"
-    )
+    print(f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}")
     assert status in [
         ScanStatus.STANDBY,
         ScanStatus.RUNNING,

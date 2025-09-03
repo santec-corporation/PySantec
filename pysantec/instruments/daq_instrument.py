@@ -156,18 +156,14 @@ class DAQInstrument(BaseInstrument):
         """Get the sampling data from the instrument."""
         self.logger.info("Retrieving sampling data.")
 
-        trigger, monitor = self._get_multiple_responses(
-            "Get_Sampling_Data", None, None
-        )
+        trigger, monitor = self._get_multiple_responses("Get_Sampling_Data", None, None)
 
         if not trigger or not monitor:
             self.logger.error("Failed to retrieve sampling data.")
             raise ValueError("No data received from the instrument.")
 
         if len(trigger) != len(monitor):
-            self.logger.error(
-                "Mismatch in lengths of trigger and monitor data."
-            )
+            self.logger.error("Mismatch in lengths of trigger and monitor data.")
             raise ValueError("Trigger and monitor data lengths do not match.")
 
         self.logger.info(
@@ -190,12 +186,8 @@ class DAQInstrument(BaseInstrument):
             raise ValueError("No raw data received from the instrument.")
 
         if len(trigger) != len(monitor):
-            self.logger.error(
-                "Mismatch in lengths of trigger and monitor raw data."
-            )
-            raise ValueError(
-                "Trigger and monitor raw data lengths do not match."
-            )
+            self.logger.error("Mismatch in lengths of trigger and monitor raw data.")
+            raise ValueError("Trigger and monitor raw data lengths do not match.")
 
         self.logger.info(
             f"Retrieved {len(trigger)} trigger "
@@ -203,4 +195,5 @@ class DAQInstrument(BaseInstrument):
         )
 
         return trigger, monitor
+
     # endregion

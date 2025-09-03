@@ -45,9 +45,16 @@ def instruments():
 @pytest.mark.parametrize("step", [1.0])
 @pytest.mark.parametrize("module_no", [1])
 @pytest.mark.parametrize("channel_no", [1])
-def test_sme_scan_and_fetch(instruments,
-                            power, start_wavelength, stop_wavelength, speed, step,
-                            module_no, channel_no):
+def test_sme_scan_and_fetch(
+    instruments,
+    power,
+    start_wavelength,
+    stop_wavelength,
+    speed,
+    step,
+    module_no,
+    channel_no,
+):
     """Run a full SME scan and verify data is retrieved."""
     tsl, mpm = instruments
     sme = pysantec.SME(tsl, mpm)
@@ -56,7 +63,11 @@ def test_sme_scan_and_fetch(instruments,
         start_wavelength, stop_wavelength, step, power, speed
     )
     sme.configure_mpm(
-        start_wavelength, stop_wavelength, step, speed, tsl_actual_step,
+        start_wavelength,
+        stop_wavelength,
+        step,
+        speed,
+        tsl_actual_step,
         is_mpm_215=False,
     )
 

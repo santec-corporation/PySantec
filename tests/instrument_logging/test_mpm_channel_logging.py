@@ -44,4 +44,3 @@ def test_mpm_channel_logging_data(mpm: MPMInstrument):
     assert len(data) > 0, "Expected at least one data point from channel logging"
 
     assert len(data) == count, "Data length should match logging data points"
-

@@ -7,6 +7,7 @@ MPM instrument control example.
 
 # Import pysantec package
 import pysantec
+
 # Import the MPM enums
 from pysantec.instruments import mpm_enums
 

@@ -13,9 +13,7 @@ import pysantec
 from pysantec.instruments import TSLInstrument, MPMInstrument
 
 
-def fetch_scan_data(mpm: MPMInstrument,
-                    module_no: int,
-                    channel_no: int):
+def fetch_scan_data(mpm: MPMInstrument, module_no: int, channel_no: int):
     """Fetches and returns logged data from the MPM."""
     try:
         count = mpm.get_logging_data_point()
@@ -30,8 +28,7 @@ def fetch_scan_data(mpm: MPMInstrument,
         return []
 
 
-def main(tsl: TSLInstrument,
-         mpm: MPMInstrument):
+def main(tsl: TSLInstrument, mpm: MPMInstrument):
     """Main workflow to initialize, configure, and perform the sweep."""
     # Create an instance and initialize SME class
     sme = pysantec.SME(tsl, mpm)
@@ -44,9 +41,17 @@ def main(tsl: TSLInstrument,
     step = float(input("Input step wavelength: "))
 
     # Configure TSL and MPM parameters
-    tsl_actual_step = sme.configure_tsl(start_wavelength, stop_wavelength, step, power, speed)
-    sme.configure_mpm(start_wavelength, stop_wavelength, step, speed, tsl_actual_step,
-                      is_mpm_215=False)    # Set is_mpm_215 to True if using MPM-215 module
+    tsl_actual_step = sme.configure_tsl(
+        start_wavelength, stop_wavelength, step, power, speed
+    )
+    sme.configure_mpm(
+        start_wavelength,
+        stop_wavelength,
+        step,
+        speed,
+        tsl_actual_step,
+        is_mpm_215=False,
+    )  # Set is_mpm_215 to True if using MPM-215 module
 
     input("\nPress any key to start to the scan process.")
 
@@ -56,15 +61,17 @@ def main(tsl: TSLInstrument,
 
     # Fetch the MPM channel logging data
     # Prompt user for module and channel numbers
-    user_input = input("\nEnter the module and channel number to fetch data from (e.g., 0,1): ")
-    module_no, channel_no = map(int, user_input.split(','))
+    user_input = input(
+        "\nEnter the module and channel number to fetch data from (e.g., 0,1): "
+    )
+    module_no, channel_no = map(int, user_input.split(","))
 
     data = fetch_scan_data(mpm, module_no, channel_no)
     # print(data)
     print("Scan data length: ", len(data))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create an instance of the Instrument manager class
     im = pysantec.InstrumentManager()
     # print(im.list_resources())

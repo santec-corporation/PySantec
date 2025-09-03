@@ -15,5 +15,5 @@ __all__ = [
     "mpm_enums",
     "TSLInstrument",
     "MPMInstrument",
-    "DAQInstrument"
+    "DAQInstrument",
 ]

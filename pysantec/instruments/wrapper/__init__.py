@@ -18,5 +18,5 @@ __all__ = [
     "tsl_enums",
     "mpm_enums",
     "InstrumentExceptionCode",
-    "to_instrument_exception_code"
+    "to_instrument_exception_code",
 ]

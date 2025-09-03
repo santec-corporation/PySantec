@@ -5,9 +5,20 @@ TSL instrument module.
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .wrapper import TSL
-from .wrapper.enumerations.tsl_enums import (LDStatus, PowerUnit, ScanStatus, ScanStartMode, ScanMode,
-                                             WavelengthUnit, PowerMode, ShutterStatus, GPIBDelimiter,
-                                             TriggerOutputSetting, TriggerOutputMode, TriggerInputMode)
+from .wrapper.enumerations.tsl_enums import (
+    LDStatus,
+    PowerUnit,
+    ScanStatus,
+    ScanStartMode,
+    ScanMode,
+    WavelengthUnit,
+    PowerMode,
+    ShutterStatus,
+    GPIBDelimiter,
+    TriggerOutputSetting,
+    TriggerOutputMode,
+    TriggerInputMode,
+)
 
 
 class TSLInstrument(BaseInstrument):
@@ -43,13 +54,17 @@ class TSLInstrument(BaseInstrument):
 
     def get_wavelength_unit(self) -> WavelengthUnit:
         """Get the current wavelength unit setting."""
-        wavelength_unit = self._get_function_enum("Get_Wavelength_Unit", WavelengthUnit.nm)
+        wavelength_unit = self._get_function_enum(
+            "Get_Wavelength_Unit", WavelengthUnit.nm
+        )
         self.logger.debug(f"Current wavelength unit: {wavelength_unit}.")
         return wavelength_unit
 
     def get_power_mode(self) -> PowerMode:
         """Get the current power mode setting."""
-        power_mode = self._get_function_enum("Get_Power_Mode", PowerMode.AutoCurrentControl)
+        power_mode = self._get_function_enum(
+            "Get_Power_Mode", PowerMode.AutoCurrentControl
+        )
         self.logger.debug(f"Current power mode: {power_mode}.")
         return power_mode
 
@@ -61,7 +76,9 @@ class TSLInstrument(BaseInstrument):
 
     def get_scan_start_mode(self) -> ScanStartMode:
         """Get the current scan start mode."""
-        scan_start_mode = self._get_function_enum("Get_Sweep_Start_Mode", ScanStartMode.NORMAL)
+        scan_start_mode = self._get_function_enum(
+            "Get_Sweep_Start_Mode", ScanStartMode.NORMAL
+        )
         self.logger.debug(f"Current scan start mode: {scan_start_mode}.")
         return scan_start_mode
 
@@ -79,7 +96,9 @@ class TSLInstrument(BaseInstrument):
 
     def get_shutter_status(self) -> ShutterStatus:
         """Get the current shutter status."""
-        shutter_status = self._get_function_enum("Get_Shutter_Status", ShutterStatus.OPEN)
+        shutter_status = self._get_function_enum(
+            "Get_Shutter_Status", ShutterStatus.OPEN
+        )
         self.logger.debug(f"Current shutter status: {shutter_status}.")
         return shutter_status
 
@@ -114,8 +133,9 @@ class TSLInstrument(BaseInstrument):
         data_points = self.query(":READ:POIN?")
 
         if data_points is None:
-            self.logger.error(f"Failed to retrieve data points."
-                              f" Status: {self.status}")
+            self.logger.error(
+                f"Failed to retrieve data points." f" Status: {self.status}"
+            )
             return 0
 
         data_points = int(data_points)
@@ -146,7 +166,7 @@ class TSLInstrument(BaseInstrument):
             result = getattr(self._instrument, fetch_dll_func)(*args, 0, data)
 
         finally:
-            self.stop_scan()    # Stop TSL process
+            self.stop_scan()  # Stop TSL process
             pass
 
         if not result or any(r is None for r in result if r is not None):
@@ -156,9 +176,11 @@ class TSLInstrument(BaseInstrument):
         status, data_points, data = result
 
         if data_points:
-            self.logger.info(f"Retrieved logging data points: {data_points}."
-                             f" Status: {self.status}."
-                             f" Received data length: {len(data)}.")
+            self.logger.info(
+                f"Retrieved logging data points: {data_points}."
+                f" Status: {self.status}."
+                f" Received data length: {len(data)}."
+            )
 
         if not isinstance(data, list):
             data = list(data)
@@ -171,8 +193,9 @@ class TSLInstrument(BaseInstrument):
 
         return self._fetch_logging_data("Get_Logging_Data")
 
-    def get_power_logging_data(self, speed: float = None,
-                               step_wavelength: float = None):
+    def get_power_logging_data(
+        self, speed: float = None, step_wavelength: float = None
+    ):
         """
         Get the power monitor data.
 
@@ -194,6 +217,7 @@ class TSLInstrument(BaseInstrument):
             speed,
             step_wavelength,
         )
+
     # endregion
     # endregion
 
@@ -299,7 +323,9 @@ class TSLInstrument(BaseInstrument):
             step_wavelength,
             0.0,
         )
-        self.logger.info(f"Scan parameters set successfully. TSL actual step: {actual_step} nm.")
+        self.logger.info(
+            f"Scan parameters set successfully. TSL actual step: {actual_step} nm."
+        )
         return actual_step
 
     def start_scan(self):
@@ -317,17 +343,12 @@ class TSLInstrument(BaseInstrument):
         self.logger.info("Sending software trigger.")
         self._set_function("Set_Software_Trigger")
 
-    def wait_for_scan_status(
-        self, wait_time: int, scan_status: ScanStatus
-    ):
+    def wait_for_scan_status(self, wait_time: int, scan_status: ScanStatus):
         """Wait for the scan status to change to the specified status."""
         self.logger.info(
-            f"Waiting for scan status: {scan_status.name} "
-            f"for {wait_time} seconds."
+            f"Waiting for scan status: {scan_status.name} " f"for {wait_time} seconds."
         )
-        self._set_function(
-            "Waiting_For_Sweep_Status", wait_time, scan_status.value
-        )
+        self._set_function("Waiting_For_Sweep_Status", wait_time, scan_status.value)
 
     def pause_scan(self):
         """Pause the scan on the TSL instrument."""
@@ -346,25 +367,23 @@ class TSLInstrument(BaseInstrument):
     def tsl_busy_check(self, wait_time: int):
         """Check if the TSL instrument is busy
         and wait for it to become available."""
-        self.logger.info(
-            f"Checking if TSL is busy, waiting for {wait_time} seconds."
-        )
+        self.logger.info(f"Checking if TSL is busy, waiting for {wait_time} seconds.")
         # This function will wait for the TSL instrument to become available
         self._set_function("TSL_Busy_Check", wait_time)
 
     def status_clear(self):
         """Status clear."""
         self.logger.info("Clearing status.")
-        self.write('*CLS')  # Status Clear
+        self.write("*CLS")  # Status Clear
 
     def device_reset(self):
         """Device reset."""
         self.logger.info("Resetting device.")
-        self.write('*RST')  # Device Reset
+        self.write("*RST")  # Device Reset
 
     def operation_query(self):
         """Queries the completion of operation."""
-        operation_query = self.query('*OPC?')
+        operation_query = self.query("*OPC?")
         self.logger.info(f"Operation query result: {operation_query}")
         return operation_query
 
@@ -372,14 +391,15 @@ class TSLInstrument(BaseInstrument):
         """Sets command mode to Legacy / SCPI."""
         if is_scpi:
             self.logger.info(f"Setting command mode to SCPI.")
-            self.write('SYST:COMM:COD 1')  # Sets the command set to SCPI.
+            self.write("SYST:COMM:COD 1")  # Sets the command set to SCPI.
         else:
             self.logger.info(f"Setting command mode to Legacy.")
-            self.write('SYST:COMM:COD 0')  # Sets the command set to Legacy.
+            self.write("SYST:COMM:COD 0")  # Sets the command set to Legacy.
 
     def set_gpib_command_delimiter(self, delimiter: GPIBDelimiter):
         """Sets the GPIB command delimiter."""
         delimiter_value = delimiter.value
         self.logger.info(f"Setting GPIB command delimiter to {delimiter}.")
-        self.write(f'SYST:COMM:GPIB:DEL {delimiter_value}')
+        self.write(f"SYST:COMM:GPIB:DEL {delimiter_value}")
+
     # endregion
