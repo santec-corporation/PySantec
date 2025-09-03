@@ -114,10 +114,8 @@ pysantec/
 │       ├── santec_communication_wrapper.py
 │       └── instrument_wrapper.py
 │
-├── measurements/                    # Santec measurements
-│   └── single_measurement_operation.py     # SME mode operation
-│
-└── tests/                          # Unit tests
+└── measurements/                    # Santec measurements
+    └── single_measurement_operation.py     # SME mode operation
 ```
 
 ---
