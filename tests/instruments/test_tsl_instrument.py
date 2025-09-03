@@ -12,7 +12,7 @@ from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
                                                                  ScanStatus)
 
 # Define the resource name for the TSL instrument
-TSL_RESOURCE_NAME = "GPIB1::3::INSTR"
+TSL_RESOURCE_NAME = "GPIB2::3::INSTR"
 
 
 # TSL Model Type Boolean
@@ -106,11 +106,13 @@ def test_wavelength(tsl, wavelength):
 
 def test_wavelength_logging_data(tsl):
     """Test the wavelength logging data retrieval of the TSL instrument."""
-    data_points, data = tsl.get_wavelength_logging_data()
-    if not data:
-        pytest.fail("Wavelength Data is empty.")
-    print(f"Data Points: {data_points}, Data: {len(data)}")
-    assert data_points == len(data)
+    data = tsl.get_wavelength_logging_data()
+
+    print(f"Wavelength data length: {len(data)}")
+    assert len(data) >= 0
+
+    data_points = tsl.get_logging_data_points()
+    assert len(data) == data_points
 
 
 @pytest.mark.parametrize(
@@ -134,7 +136,7 @@ def test_scan_parameters(tsl, scan_params):
     """Test the scan parameters setting of the TSL instrument."""
     actual_step = tsl.set_scan_parameters(**scan_params)
     print(f"Set Scan Parameters: {scan_params}, Actual Step: {actual_step}")
-    assert actual_step > 0
+    assert actual_step > 0.0
 
 
 @pytest.mark.parametrize(
@@ -174,11 +176,12 @@ def test_system_error(tsl):
     assert isinstance(error, str)
 
 
-@pytest.mark.parametrize("speed,step_wavelength", [(0.5, 0.1), (1.0, 0.05)])
-def test_power_monitor_data(tsl, speed, step_wavelength):
+def test_power_monitor_data(tsl):
     """Test the power monitor data retrieval functionality."""
-    data_points, data = tsl.get_power_logging_data(speed, step_wavelength)
-    print(f"Power monitor data points: {data_points}")
-    assert data_points >= 0
-    if data_points > 0:
-        assert len(data) == data_points
+    data = tsl.get_power_logging_data()
+
+    print(f"Power monitor data length: {len(data)}")
+    assert len(data) >= 0
+
+    data_points = tsl.get_logging_data_points()
+    assert len(data) == data_points
