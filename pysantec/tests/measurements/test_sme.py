@@ -6,7 +6,6 @@ Integration test for SME mode operation.
 
 import pytest
 import pysantec
-from pysantec.instruments import TSLInstrument, MPMInstrument
 
 
 # Define GPIB/TCPIP resource strings for the instruments
