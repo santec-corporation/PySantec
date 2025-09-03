@@ -1,7 +1,7 @@
 # pysantec/tests/test_setup_dlls.py
 
 """
-Test Setup DLLs functionality.
+Test setup DLLs functionality.
 """
 
 import pysantec
