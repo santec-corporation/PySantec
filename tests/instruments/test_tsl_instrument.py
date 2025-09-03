@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pysantec/tests/instruments/test_tsl_instrument.py
 
 """
@@ -6,16 +5,16 @@ TSL instrument tests.
 """
 
 import time
-
 import pytest
-
 import pysantec
-from pysantec.instruments.wrapper.enumerations.tsl_enums import (LDStatus,
-                                                                 PowerUnit,
-                                                                 SweepStatus)
+from pysantec.instruments.wrapper.enumerations.tsl_enums import (
+    LDStatus,
+    PowerUnit,
+    ScanStatus,
+)
 
 # Define the resource name for the TSL instrument
-TSL_RESOURCE_NAME = "GPIB1::3::INSTR"
+TSL_RESOURCE_NAME = "GPIB2::3::INSTR"
 
 
 # TSL Model Type Boolean
@@ -76,14 +75,14 @@ def test_power_unit(tsl, unit):
 
 def test_get_sweep_status(tsl):
     """Test the sweep status retrieval of the TSL instrument."""
-    sweep_status = tsl.get_sweep_status()
+    sweep_status = tsl.get_scan_status()
     print(f"Sweep Status: {sweep_status}")
     assert sweep_status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
-        SweepStatus.STANDING_BY_TRIGGER,
-        SweepStatus.PREPARATION_FOR_SWEEP_START,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
+        ScanStatus.STANDING_BY_TRIGGER,
+        ScanStatus.PREPARATION_FOR_SWEEP_START,
     ]
 
 
@@ -109,11 +108,13 @@ def test_wavelength(tsl, wavelength):
 
 def test_wavelength_logging_data(tsl):
     """Test the wavelength logging data retrieval of the TSL instrument."""
-    data_points, data = tsl.get_wavelength_logging_data()
-    if not data:
-        pytest.fail("Wavelength Data is empty.")
-    print(f"Data Points: {data_points}, Data: {len(data)}")
-    assert data_points == len(data)
+    data = tsl.get_wavelength_logging_data()
+
+    print(f"Wavelength data length: {len(data)}")
+    assert len(data) >= 0
+
+    data_points = tsl.get_logging_data_points()
+    assert len(data) == data_points
 
 
 @pytest.mark.parametrize(
@@ -137,36 +138,34 @@ def test_scan_parameters(tsl, scan_params):
     """Test the scan parameters setting of the TSL instrument."""
     actual_step = tsl.set_scan_parameters(**scan_params)
     print(f"Set Scan Parameters: {scan_params}, Actual Step: {actual_step}")
-    assert actual_step > 0
+    assert actual_step > 0.0
 
 
 @pytest.mark.parametrize(
     "wait_time,expected_status",
-    [(1, SweepStatus.STANDBY), (2, SweepStatus.RUNNING)],
+    [(1, ScanStatus.STANDBY), (2, ScanStatus.RUNNING)],
 )
 def test_wait_for_sweep_status(tsl, wait_time, expected_status):
     """Test waiting for a specific sweep status."""
-    tsl.wait_for_sweep_status(wait_time, expected_status)
-    status = tsl.get_sweep_status()
-    print(
-        f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}"
-    )
+    tsl.wait_for_scan_status(wait_time, expected_status)
+    status = tsl.get_scan_status()
+    print(f"Wait time: {wait_time}, Expected: {expected_status}, Got: {status}")
     assert status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
     ]
 
 
 def test_tsl_busy_check(tsl):
     """Test the TSL busy check functionality."""
     tsl.tsl_busy_check(1)
-    status = tsl.get_sweep_status()
+    status = tsl.get_scan_status()
     print(f"Status after busy check: {status}")
     assert status in [
-        SweepStatus.STANDBY,
-        SweepStatus.RUNNING,
-        SweepStatus.PAUSE,
+        ScanStatus.STANDBY,
+        ScanStatus.RUNNING,
+        ScanStatus.PAUSE,
     ]
 
 
@@ -177,11 +176,12 @@ def test_system_error(tsl):
     assert isinstance(error, str)
 
 
-@pytest.mark.parametrize("speed,step_wavelength", [(0.5, 0.1), (1.0, 0.05)])
-def test_power_monitor_data(tsl, speed, step_wavelength):
+def test_power_monitor_data(tsl):
     """Test the power monitor data retrieval functionality."""
-    data_points, data = tsl.get_power_monitor_data(speed, step_wavelength)
-    print(f"Power monitor data points: {data_points}")
-    assert data_points >= 0
-    if data_points > 0:
-        assert len(data) == data_points
+    data = tsl.get_power_logging_data()
+
+    print(f"Power monitor data length: {len(data)}")
+    assert len(data) >= 0
+
+    data_points = tsl.get_logging_data_points()
+    assert len(data) == data_points

@@ -5,9 +5,13 @@ MPM instrument module.
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .wrapper import MPM
-from .wrapper.enumerations.mpm_enums import (LoggingStatus, MeasurementMode,
-                                             PowerUnit, RangeMode,
-                                             TriggerInputMode)
+from .wrapper.enumerations.mpm_enums import (
+    LoggingStatus,
+    MeasurementMode,
+    PowerUnit,
+    RangeMode,
+    TriggerInputMode,
+)
 
 
 class MPMInstrument(BaseInstrument):
@@ -23,66 +27,90 @@ class MPMInstrument(BaseInstrument):
     # region Get Methods
     def get_range_mode(self) -> RangeMode:
         """Get the current range mode of the MPM instrument."""
-        return self._get_function_enum("Get_READ_Range_Mode", RangeMode.AUTO)
+        range_mode = self._get_function_enum("Get_READ_Range_Mode", RangeMode.AUTO)
+        self.logger.debug(f"Current range mode: {range_mode}")
+        return range_mode
 
     def get_power_unit(self) -> PowerUnit:
         """Get the current power unit setting of the MPM instrument."""
-        return self._get_function_enum("Get_Unit", PowerUnit.dBm)
+        power_unit = self._get_function_enum("Get_Unit", PowerUnit.dBm)
+        self.logger.debug(f"Current power unit: {power_unit}")
+        return power_unit
 
     def get_measurement_mode(self) -> MeasurementMode:
         """Get the current measurement mode of the MPM instrument."""
-        return self._get_function_enum("Get_Mode", MeasurementMode.FREERUN)
+        measurement_mode = self._get_function_enum("Get_Mode", MeasurementMode.FREERUN)
+        self.logger.debug(f"Current measurement mode: {measurement_mode}")
+        return measurement_mode
 
     def get_trigger_input_mode(self) -> TriggerInputMode:
         """Get the current trigger input mode of the MPM instrument."""
-        return self._get_function_enum(
+        trigger_input_mode = self._get_function_enum(
             "Get_Trigger_Input_Mode", TriggerInputMode.INTERNAL
         )
+        self.logger.debug(f"Current trigger input mode: {trigger_input_mode}")
+        return trigger_input_mode
 
     def get_range_value(self) -> int:
         """Get the current dynamic range value of the MPM instrument."""
-        return self._get_function("Get_Range", int)
+        range_value = self._get_function("Get_Range", int)
+        self.logger.debug(f"Current range value: {range_value}")
+        return range_value
 
     def get_averaging_time(self) -> float:
         """Get the current averaging time setting of the MPM instrument."""
-        return self._get_function("Get_Averaging_Time", float)
+        averaging_time = self._get_function("Get_Averaging_Time", float)
+        self.logger.debug(f"Current averaging time: {averaging_time} seconds")
+        return averaging_time
 
     def get_wavelength(self) -> float:
         """Get the current wavelength setting of the MPM instrument."""
-        return self._get_function("Get_Wavelength", float)
+        wavelength_value = self._get_function("Get_Wavelength", float)
+        self.logger.debug(f"Current wavelength: {wavelength_value} nm")
+        return wavelength_value
 
     def get_module_measurement_mode(self, module_number: int):
         """Get the measurement mode for a specific module."""
-        return self._set_and_get_function_enum(
+        module_measurement_mode = self._set_and_get_function_enum(
             "Get_Mode_Each_Module",
             MeasurementMode,
             module_number,
             MeasurementMode.FREERUN.value,
         )
+        self.logger.debug(
+            f"Module {module_number} measurement mode: {module_measurement_mode}"
+        )
+        return module_measurement_mode
 
     def get_channel_range(self, module_number: int, channel_number: int):
         """Get the range value for a specific channel in a module."""
-        return self._set_and_get_function(
+        channel_range_value = self._set_and_get_function(
             "Get_Range_Each_Channel",
             module_number,
             channel_number,
             response_type=int,
         )
+        self.logger.debug(
+            f"Module {module_number}, Channel {channel_number} range value: {channel_range_value}"
+        )
+        return channel_range_value
 
-    def get_sweep_speed(self):
-        """Get the current sweep speed setting of the MPM instrument."""
-        return self._get_function("Get_Sweep_Speed", float)
+    def get_scan_speed(self):
+        """Get the current scan speed setting of the MPM instrument."""
+        scan_speed = self._get_function("Get_Sweep_Speed", float)
+        self.logger.debug(f"Current sweep speed: {scan_speed} nm/s")
+        return scan_speed
 
     def get_logging_data_point(self):
         """Get the number of logging data points
         configured in the MPM instrument."""
-        return self._get_function("Get_Logging_Data_Point", int)
+        logging_data_points = self._get_function("Get_Logging_Data_Point", int)
+        self.logger.info(f"Current logging data points: {logging_data_points}")
+        return logging_data_points
 
     def get_logging_status(self):
         """Get the current logging status of the MPM instrument."""
-        status, count = self._get_multiple_responses(
-            "Get_Logging_Status", int, int
-        )
+        status, count = self._get_multiple_responses("Get_Logging_Status", int, int)
         logging_status = LoggingStatus(status)
         if logging_status == LoggingStatus.COMPLETED:
             self.logger.info("Logging is completed.")
@@ -91,24 +119,69 @@ class MPMInstrument(BaseInstrument):
         elif logging_status == LoggingStatus.LOGGING:
             self.logger.info(f"Logging is running with {count} data points.")
         self.logger.debug(f"Logging status: {logging_status}, Count: {count}")
+        self.logger.debug(f"Logging status: {logging_status}. Data count: {count}")
         return logging_status, count
 
     def get_module_logging_data(self, module_number: int):
         """Get the logging data for a specific module."""
-        return self._set_and_get_function(
-            "Get_Each_Module_Loggdata", module_number, response_type=None
+        self.logger.info(
+            f"Fetching module logging data for " f"module: {module_number}."
         )
 
-    def get_channel_logging_data(
-        self, module_number: int, channel_number: int
-    ):
+        try:
+            data = self._set_and_get_function(
+                "Get_Each_Module_Loggdata", module_number, response_type=None
+            )
+            if data is None or len(data) == 0:
+                self.logger.info("Data is empty. Could not fetch any logging data.")
+                return []
+            self.logger.info(f"Logging data length: {len(data)}")
+
+        except Exception as e:
+            error_string = f"Error while fetching module logging data: {e}"
+            self.logger.error(error_string)
+            raise Exception(error_string)
+
+        # Get number of rows and columns
+        rows = data.GetLength(0)
+        cols = data.GetLength(1)
+
+        # Convert to a list of lists
+        result = []
+        for i in range(rows):
+            row = []
+            for j in range(cols):
+                row.append(data[i, j])
+            result.append(row)
+
+        self.logger.info(f"Module logging data result: {len(result)}")
+        return list(result)
+
+    def get_channel_logging_data(self, module_number: int, channel_number: int):
         """Get the logging data for a specific channel in a module."""
-        return self._set_and_get_function(
-            "Get_Each_Channel_Logdata",
-            module_number,
-            channel_number,
-            response_type=None,
+        self.logger.info(
+            f"Fetching channel logging data for "
+            f"module: {module_number} and chanel: {channel_number}."
         )
+
+        try:
+            data = self._set_and_get_function(
+                "Get_Each_Channel_Logdata",
+                module_number,
+                channel_number,
+                response_type=None,
+            )
+            if data is None or len(data) == 0:
+                self.logger.info("Data is empty. Could not fetch any logging data.")
+                return []
+            self.logger.info(f"Logging data length: {len(data)}")
+
+        except Exception as e:
+            error_string = f"Error while fetching channel logging data: {e}"
+            self.logger.error(error_string)
+            raise Exception(error_string)
+
+        return list(data)
 
     # endregion
 
@@ -125,9 +198,7 @@ class MPMInstrument(BaseInstrument):
 
     def set_measurement_mode(self, measurement_mode: MeasurementMode):
         """Set the measurement mode of the MPM instrument."""
-        self.logger.info(
-            f"Setting measurement mode to: {measurement_mode.name}"
-        )
+        self.logger.info(f"Setting measurement mode to: {measurement_mode.name}")
         self._set_function_enum("Set_Mode", measurement_mode)
 
     def set_trigger_input_mode(self, mode: TriggerInputMode):
@@ -166,24 +237,19 @@ class MPMInstrument(BaseInstrument):
         self.logger.info(f"Setting wavelength to: {value} nm")
         self._set_function("Set_Wavelength", value)
 
-    def set_module_measurement_mode(
-        self, module_number: int, mode: MeasurementMode
-    ):
+    def set_module_measurement_mode(self, module_number: int, mode: MeasurementMode):
         """Set the measurement mode for a specific module."""
         self.logger.info(
-            f"Setting measurement mode for module {module_number} "
-            f"to: {mode.name}"
+            f"Setting measurement mode for module {module_number} " f"to: {mode.name}"
         )
-        self._set_function("Set_Mode_Each_Module",
-                           module_number, mode.value)
+        self._set_function("Set_Mode_Each_Module", module_number, mode.value)
 
     def set_channel_range(
         self, module_number: int, channel_number: int, range_value: int
     ):
         """Set the range value for a specific channel in a module."""
         self.logger.info(
-            f"Setting range for module {module_number}, "
-            f"channel {channel_number}"
+            f"Setting range for module {module_number}, " f"channel {channel_number}"
         )
         self._set_function(
             "Set_Range_Each_Channel",
@@ -192,21 +258,20 @@ class MPMInstrument(BaseInstrument):
             range_value,
         )
 
-    def set_sweep_speed(self, speed: float):
-        """Set the sweep speed for the MPM instrument."""
+    def set_scan_speed(self, speed: float):
+        """Set the scan speed for the MPM instrument."""
         self.logger.info(f"Setting sweep speed to: {speed} nm/s")
         self._set_function("Set_Sweep_Speed", speed)
 
     def set_logging_data_point(self, data_points: int):
-        """Set the number of logging data points for the MPM instrument."""
+        """
+        Set the number of logging data points for the MPM instrument.
+        Do not set this when using SWEEP2/CONST2 measurement modes.
+        """
         self.logger.info(f"Setting logging data points to: {data_points}")
         if data_points < 1:
-            self.logger.error(
-                "Logging data points must be a positive integer."
-            )
-            raise ValueError(
-                "Logging data points must be a positive integer."
-            )
+            self.logger.error("Logging data points must be a positive integer.")
+            raise ValueError("Logging data points must be a positive integer.")
         elif data_points > 1000001:
             self.logger.error(
                 "Logging data points must be less than or equal to 1000001."

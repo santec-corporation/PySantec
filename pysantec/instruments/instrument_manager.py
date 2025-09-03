@@ -3,15 +3,13 @@ Instrument Manager module.
 """
 
 from typing import Dict
-
 from ..logger import get_logger
 from .base_instrument import BaseInstrument
 from .daq_instrument import DAQInstrument
 from .mpm_instrument import MPMInstrument
 from .tsl_instrument import TSLInstrument
 from .wrapper import InstrumentWrapper
-from .wrapper.enumerations.connection_enums import (ConnectionType, GPIBType,
-                                                    Terminator)
+from .wrapper.enumerations.connection_enums import ConnectionType, GPIBType, Terminator
 
 
 class InstrumentManager:
@@ -41,17 +39,19 @@ class InstrumentManager:
                 self._resources_listed = True
 
             except Exception as e:
-                self.logger.error(f"Error while listing resources: {e}")
-                raise Exception(f"Error while listing resources: {e}")
-
+                error_string = f"Error while listing resources: {e}"
+                self.logger.error(error_string)
+                raise Exception(error_string)
 
     def _list_gpib_resources(self):
         """Lists GPIB resources."""
         self.logger.info("Listing VISA GPIB resources...")
+
         try:
             gpib_resources = self._instrument_wrapper.get_gpib_resources()
             if gpib_resources:
                 self._resources.extend(gpib_resources)
+
         except Exception as e:
             self.logger.error(f"Error listing VISA GPIB resources: {e}")
 
@@ -85,9 +85,7 @@ class InstrumentManager:
         except Exception as e:
             self.logger.error(f"Error listing Serial Port resources: {e}")
 
-    def _connect(
-        self, resource_name, terminator: Terminator = Terminator.CRLF
-    ):
+    def _connect(self, resource_name, terminator: Terminator = Terminator.CRLF):
         """Connects to the specified resource."""
         connection_type = None
         if resource_name in self._connected_instruments.keys():
@@ -101,9 +99,7 @@ class InstrumentManager:
             raise Exception(f"No resources available: {len(self._resources)}")
 
         if resource_name not in self._resources:
-            self.logger.error(
-                f"Try to connect invalid resource: {resource_name}"
-            )
+            self.logger.error(f"Try to connect invalid resource: {resource_name}")
             raise Exception(f"Invalid resource: {resource_name}")
 
         if not connection_type:
@@ -143,9 +139,7 @@ class InstrumentManager:
     def _gpib_connection(self, resource_name, terminator):
         """Establishes a GPIB connection."""
         self.logger.info(f"Connecting to GPIB resource: {resource_name}")
-        gpib_board, gpib_address, _ = resource_name.split(
-            "::"
-        )  # GPIB0::10::INSTR
+        gpib_board, gpib_address, _ = resource_name.split("::")  # GPIB0::10::INSTR
         gpib_board = gpib_board[-1]
         self._instrument_wrapper.connect_gpib(
             self._instrument,
@@ -174,9 +168,7 @@ class InstrumentManager:
     def _dev_connection(self, resource_name):
         """Establishes a connection to a NI DAQ device."""
         self.logger.info(f"Connecting to NI DAQ resource: {resource_name}")
-        self._instrument_wrapper.connect_daq(
-            self._instrument, resource_name
-        )  # Dev1
+        self._instrument_wrapper.connect_daq(self._instrument, resource_name)  # Dev1
 
     @staticmethod
     def _get_connection_type(resource_name):
@@ -207,9 +199,7 @@ class InstrumentManager:
         self.logger.info(f"Found {len(resources)} resources")
         return resources
 
-    def connect_tsl(
-        self, resource_name: str
-    ) -> TSLInstrument | BaseInstrument:
+    def connect_tsl(self, resource_name: str) -> TSLInstrument | BaseInstrument:
         """Connects to a TSL instrument."""
         self._list_resources()
         if not resource_name:
@@ -219,9 +209,7 @@ class InstrumentManager:
         self._instrument = TSLInstrument()
         return self._connect(resource_name, terminator)
 
-    def connect_mpm(
-        self, resource_name: str
-    ) -> MPMInstrument | BaseInstrument:
+    def connect_mpm(self, resource_name: str) -> MPMInstrument | BaseInstrument:
         """Connects to an MPM instrument."""
         self._list_resources()
         if not resource_name:

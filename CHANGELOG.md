@@ -7,6 +7,40 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.2.0] — 2025-09-03
+
+### Added
+
+- More TSL functions to the `TSLInstrument` class.  
+- TCPIP connection example.  
+- Connection tests.  
+- SME (Single Measurement Mode) implementation using TSL + MPM instruments.  
+- SME tests.  
+- TSL data logging tests.  
+- MPM data logging tests.  
+
+### Changed
+
+- Refactored TSL wavelength data logging function.  
+- Refactored TSL power data logging function.  
+- Refactored MPM module data logging function.  
+- Refactored MPM channel data logging function.  
+- Exposed instrument class names in `pysantec.instruments`.  
+- Moved `tests/` directory outside the `pysantec` package to the main project root.  
+- Updated examples directory documentation.  
+- Updated DLL load error message.  
+- Updated project README documentation.  
+
+### Fixed
+
+- Handling of instrument exception codes.  
+
+### Removed
+
+- Removed unnecessary mention of `# -*- coding: utf-8 -*-`.  
+
+---
+
 ## [0.1.1] — 2025-08-21
 
 ### Fixed
@@ -66,5 +100,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+[0.2.0]: https://github.com/santec-corporation/pysantec/releases/tag/v0.2.0
 [0.1.1]: https://github.com/santec-corporation/pysantec/releases/tag/v0.1.1
 [0.1.0]: https://github.com/santec-corporation/pysantec/releases/tag/v0.1.0

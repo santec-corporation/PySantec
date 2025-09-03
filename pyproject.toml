@@ -1,11 +1,11 @@
 [project]
 name = "pysantec"
-version = "0.1.2"
+version = "0.2.0"
 description = "Python Package for Santec IL and PDL Swept Test System"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 authors = [
     { name = "Santec Holdings Corporation" }
 ]
@@ -20,9 +20,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",

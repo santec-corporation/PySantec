@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pysantec/tests/instruments/test_mpm_instrument.py
 
 """
@@ -6,12 +5,15 @@ MPM instrument tests.
 """
 
 import time
-
 import pytest
-
 import pysantec
 from pysantec.instruments.wrapper.enumerations.mpm_enums import (
-    LoggingStatus, MeasurementMode, PowerUnit, RangeMode, TriggerInputMode)
+    LoggingStatus,
+    MeasurementMode,
+    PowerUnit,
+    RangeMode,
+    TriggerInputMode,
+)
 
 # Define the resource name for the MPM instrument
 MPM_RESOURCE_NAME = "GPIB1::17::INSTR"
@@ -101,9 +103,7 @@ def test_averaging_time(mpm, value):
     assert averaging_time == value
 
 
-@pytest.mark.parametrize(
-    "wavelength", [1260, 1360, 1485, 1500, 1550, 1600, 1640]
-)
+@pytest.mark.parametrize("wavelength", [1260, 1360, 1485, 1500, 1550, 1600, 1640])
 def test_wavelength(mpm, wavelength):
     """Test setting and getting wavelength."""
     mpm.set_wavelength(wavelength)
@@ -121,9 +121,7 @@ def test_logging_data_points(mpm, data_points):
     assert get_data_points == data_points
 
 
-@pytest.mark.parametrize(
-    "mode", [TriggerInputMode.INTERNAL, TriggerInputMode.EXTERNAL]
-)
+@pytest.mark.parametrize("mode", [TriggerInputMode.INTERNAL, TriggerInputMode.EXTERNAL])
 def test_trigger_input_mode(mpm, mode):
     """Test setting and getting trigger input mode."""
     mpm.set_trigger_input_mode(mode)
@@ -145,9 +143,7 @@ def test_module_measurement_mode(mpm, module_number, mode):
     """Test setting and getting measurement mode for specific modules."""
     mpm.set_module_measurement_mode(module_number, mode)
     measurement_mode = mpm.get_module_measurement_mode(module_number)
-    print(
-        f"Module {module_number} - Set Mode: {mode}, Get: {measurement_mode}"
-    )
+    print(f"Module {module_number} - Set Mode: {mode}, Get: {measurement_mode}")
     assert measurement_mode == mode
 
 
@@ -175,8 +171,8 @@ def test_channel_range(mpm, module_number, channel_number, range_value):
 @pytest.mark.parametrize("speed", [0.1, 0.5, 1.0, 2.0, 5.0])
 def test_sweep_speed(mpm, speed):
     """Test setting and getting sweep speed."""
-    mpm.set_sweep_speed(speed)
-    get_speed = mpm.get_sweep_speed()
+    mpm.set_scan_speed(speed)
+    get_speed = mpm.get_scan_speed()
     print(f"Set Sweep Speed: {speed}, Get: {get_speed}")
     assert get_speed == speed
 

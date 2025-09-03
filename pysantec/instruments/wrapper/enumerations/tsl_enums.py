@@ -3,7 +3,6 @@ TSL Instrument Enums.
 """
 
 from enum import Enum
-
 from ..santec_wrapper import TSL
 
 
@@ -21,8 +20,8 @@ class ShutterStatus(Enum):
     CLOSE = TSL.Shutter_Status.Shutter_Close
 
 
-class SweepMode(Enum):
-    """Enum for Sweep Modes of the TSL instrument."""
+class ScanMode(Enum):
+    """Enum for Scan Modes of the TSL instrument."""
 
     STEPPED_ONE_WAY = TSL.Sweep_Mode.Step_Oneway
     CONTINUOUS_ONE_WAY = TSL.Sweep_Mode.Continuous_Oneway
@@ -30,8 +29,8 @@ class SweepMode(Enum):
     CONTINUOUS_TWO_WAY = TSL.Sweep_Mode.Continuous_Twoway
 
 
-class SweepStatus(Enum):
-    """Enum for Sweep Status of the TSL instrument."""
+class ScanStatus(Enum):
+    """Enum for Scan Status of the TSL instrument."""
 
     STANDBY = TSL.Sweep_Status.Standby
     RUNNING = TSL.Sweep_Status.Running
@@ -56,8 +55,8 @@ class TriggerInputMode(Enum):
     ENABLE = TSL.Trigger_Input_Mode.Enable
 
 
-class SweepStartMode(Enum):
-    """Enum for Sweep Start Modes of the TSL instrument."""
+class ScanStartMode(Enum):
+    """Enum for Scan Start Modes of the TSL instrument."""
 
     NORMAL = TSL.Sweep_Start_Mode.Normal
     WAITING_FOR_TRIGGER = TSL.Sweep_Start_Mode.WaitingforTrigger
@@ -68,3 +67,40 @@ class PowerUnit(Enum):
 
     dBm = TSL.Power_Unit.dBm
     mW = TSL.Power_Unit.mW
+
+
+class WavelengthUnit(Enum):
+    """Enum for Wavelength Units of the TSL instrument."""
+
+    nm = TSL.Wavelength_Unit.nm
+    THz = TSL.Wavelength_Unit.THz
+
+
+class PowerMode(Enum):
+    """Enum for Power mode of the TSL instrument."""
+
+    AutoCurrentControl = TSL.Power_Mode.ACC
+    AutoPowerControl = TSL.Power_Mode.APC
+
+
+class TriggerOutputSetting(Enum):
+    """Enum for Trigger output source of the TSL instrument."""
+
+    WAVELENGTH = TSL.TriggerOut_Source.Wavelength
+    TIME = TSL.TriggerOut_Source.Time
+
+
+class CoherenceControlStatus(Enum):
+    """Enum for Coherence Control Status of the TSL instrument."""
+
+    OFF = TSL.Coh_Status.Coh_OFF
+    ON = TSL.Coh_Status.Coh_ON
+
+
+class GPIBDelimiter(Enum):
+    """Enum for GPIB Command Delimiter of the TSL instrument."""
+
+    CR = 0
+    LF = 1
+    CRLF = 2
+    NONE = 3

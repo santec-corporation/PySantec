@@ -17,12 +17,13 @@ logger = get_logger(__name__)
 
 class UnsupportedPlatformError(OSError):
     """Raised when PySantec is imported on a non-Windows platform."""
+
     pass
 
 
 if platform.system() != "Windows":
     error_string = (
-        "❌ PySantec requires Windows because the Santec DLLs are built on .NET Framework. "
+        "❌ PySantec requires Windows 10/11 with .NET Framework 4.5.2+ installed. "
         f"Current platform: {platform.system()} {platform.release()}"
     )
     logger.error(error_string)

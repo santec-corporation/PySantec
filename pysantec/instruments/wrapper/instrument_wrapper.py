@@ -93,9 +93,7 @@ class InstrumentWrapper:
         """
         instrument = instrument_instance.instrument(InstrumentWrapper)
         if not instrument:
-            raise InstrumentConnectionError(
-                "Could not create instrument instance"
-            )
+            raise InstrumentConnectionError("Could not create instrument instance")
         return instrument
 
     def connect_gpib(

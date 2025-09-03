@@ -10,6 +10,7 @@ Covers initial setup and connection:
 
 - Listing available GPIB, USB, and NI DAQ resources
 - Establishing connections to TSL (laser), MPM (power meter), and DAQ devices
+- Connect to an instrument via Ethernet / LAN
 
 See [`basic_usage/README.md`](basic_usage/README.md) for full instructions.
 
@@ -27,10 +28,26 @@ See [`instrument_control/README.md`](instrument_control/README.md) for full exam
 
 ---
 
+## Instrument Logging
+
+Demonstrates how to fetch the logging data of a TSL and MPM.
+
+See [`instrument_logging/README.md`](instrument_logging/README.md) for full examples.
+
+---
+
+## SME Operation
+
+Demonstrates how to perform an SME mode operation using the TSL and MPM instruments.
+
+See [`sme_operation/README.md`](sme_operation/README.md) for full examples.
+
+---
+
 ## Requirements
 
 - Platform: Windows 10+
-- Python version 3.7+
+- Python version 3.10+
 - `pysantec` package installed
 - Santec DLLs properly set up
 - [NI-488.2](https://www.ni.com/en-us/support/downloads/drivers/download.ni-488-2.html) for GPIB devices

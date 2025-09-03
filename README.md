@@ -8,6 +8,10 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/pysantec.svg)](https://pypi.python.org/pypi/pysantec)
 [![License](https://img.shields.io/github/license/santec-corporation/pysantec)](LICENSE)
 
+> [!NOTE]
+> ⚠️ PySantec is currently under active development.
+> Features and APIs may change without prior notice.
+
 ---
 
 ## Overview
@@ -41,13 +45,12 @@ pip install pythonnet
 ### Platform & Requirements
 
 - OS: Windows 10+ 
-- Python: 3.7+
+- Python: 3.10+
 - Santec DLLs: Installed via Santec Swept Test System (IL/PDL) software.
 - Download the latest version of the STS IL/PDL software [here](https://downloads.santec.com/api/download/ce94afc6-f283-4123-bf7b-3db322540c2b).
-- .NET: .NET Framework (as required by Santec DLLs)
+- .NET: Framework 4.5.2+ (as required by Santec DLLs)
 
-> ⚠️ PySantec relies on Santec’s .NET Framework DLLs and therefore does not support Linux or macOS.
-
+> ⚠️ PySantec relies on Santec’s .NET Framework DLLs and therefore does not support Linux or macOS. <br>
 > Importing the package on non‑Windows platforms raises an error.
 
 
@@ -94,6 +97,7 @@ print(daq.is_sampling)
 pysantec/
 ├── drivers/                        # DLL management
 │   └── dll_manager.py
+│
 ├── instruments/                    # High-level instrument control
 │   ├── instrument_manager.py
 │   ├── base_instrument.py
@@ -105,12 +109,13 @@ pysantec/
 │       │   ├── connection_enums.py
 │       │   ├── tsl_enums.py
 │       │   └── mpm_enums.py
-│       ├── santec/
-│       │   └── santec_wrapper.py
 │       ├── exceptions.py
+│       ├── santec_wrapper.py
 │       ├── santec_communication_wrapper.py
 │       └── instrument_wrapper.py
-└── tests/                          # Unit tests
+│
+└── measurements/                    # Santec measurements
+    └── single_measurement_operation.py     # SME mode operation
 ```
 
 ---
@@ -123,6 +128,7 @@ Example scripts are available in the `examples/` directory:
 
 - `examples/basic_usage/list_resources.py`
 - `examples/basic_usage/connect_instruments.py`
+- `examples/basic_usage/tcpip_connect.py`
 
 ### 🔹 Instrument Control
 
@@ -130,14 +136,28 @@ Example scripts are available in the `examples/` directory:
 - `examples/instrument_control/mpm_control.py`
 - `examples/instrument_control/daq_control.py`
 
+### 🔹 Instrument Logging
+
+- `examples/instrument_logging/print_tsl_wavelength_logging_data.py`
+- `examples/instrument_logging/print_tsl_power_logging_data.py`
+- `examples/instrument_logging/print_mpm_channel_logging_data.py`
+- `examples/instrument_logging/print_mpm_module_logging_data.py`
+
+### 🔹 SME Operation
+
+- `examples/sme_operation/sme_operation.py`
+
+For more information, read [Examples](examples/README.md).
+
 ---
 
 ## Supported Instruments
-| Instrument Type | Models                               |
-|------------------|-------------------------------------|
-| TSL (Laser)      | TSL-550, TSL-570, TSL-710, TSL-770  |
-| MPM (Power Meter) | MPM-210, MPM-210H, MPM-220         |
-| DAQ (NI)         | Compatible with NI-DAQmx            | 
+
+| Instrument Type   | Models                               |
+|-------------------|--------------------------------------|
+| TSL (Laser)       | TSL-550, TSL-570, TSL-710, TSL-770   |
+| MPM (Power Meter) | MPM-210, MPM-210H, MPM-220           |
+| DAQ (NI)          | Compatible with NI-DAQmx             | 
 
 ---
 
