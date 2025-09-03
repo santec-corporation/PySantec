@@ -123,7 +123,7 @@ class TSLInstrument(BaseInstrument):
 
         return data_points
 
-    def _fetch_logging_data(self, fetch_func, *args, **kwargs):
+    def _fetch_logging_data(self, fetch_dll_func, *args):
         """Generic helper to fetch logging data with a scan lifecycle."""
         self.tsl_busy_check(2)  # Ensure TSL is not busy
 
@@ -133,6 +133,9 @@ class TSLInstrument(BaseInstrument):
             self.logger.error("No data points found.")
             return 0, None
 
+        # Initialize data list
+        data = [0.0] * data_points
+
         self.tsl_busy_check(2)  # Ensure TSL is not busy
 
         # Set the TSL start scan mode to waiting for trigger
@@ -140,7 +143,8 @@ class TSLInstrument(BaseInstrument):
         self.start_scan()
 
         try:
-            result = fetch_func(*args, **kwargs)
+            result = getattr(self._instrument, fetch_dll_func)(*args, 0, data)
+
         finally:
             self.stop_scan()    # Stop TSL process
             pass
@@ -149,24 +153,23 @@ class TSLInstrument(BaseInstrument):
             self.logger.error("Failed to retrieve logging data.")
             return 0, None
 
-        return result
+        status, data_points, data = result
+
+        if data_points:
+            self.logger.info(f"Retrieved logging data points: {data_points}."
+                             f" Status: {self.status}."
+                             f" Received data length: {len(data)}.")
+
+        if not isinstance(data, list):
+            data = list(data)
+
+        return data
 
     def get_wavelength_logging_data(self):
         """Get the wavelength logging data."""
         self.logger.info("Fetch the wavelength logging data.")
 
-        result = self._fetch_logging_data(
-            self._get_multiple_responses, "Get_Logging_Data", int, None
-        )
-
-        data_points, data = result if len(result) == 2 else (-1, *result[1:])
-
-        if data_points:
-            self.logger.info(
-                f"Retrieved wavelength data points: {data_points}."
-                f" Status: {self.status}")
-
-        return data
+        return self._fetch_logging_data("Get_Logging_Data")
 
     def get_power_logging_data(self, speed: float = None,
                                step_wavelength: float = None):
@@ -186,22 +189,11 @@ class TSLInstrument(BaseInstrument):
 
         self.logger.info(f"Speed value: {speed}. Step wavelength: {step_wavelength}")
 
-        result = self._fetch_logging_data(
-            self._set_and_get_multiple_responses,
+        return self._fetch_logging_data(
             "Get_Logging_Data_Power_for_STS",
-            int,
-            None,
             speed,
             step_wavelength,
         )
-        data_points, data =  result if len(result) == 2 else (-1, *result[1:])
-
-        if data_points:
-            self.logger.info(f"Retrieved power logging data points: {data_points}."
-                             f" Status: {self.status}")
-
-        return list(data)
-
     # endregion
     # endregion
 
