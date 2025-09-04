@@ -91,7 +91,7 @@ class InstrumentWrapper:
         Raises:
             ConnectionError: If instrument creation fails
         """
-        instrument = instrument_instance.instrument(InstrumentWrapper)
+        instrument = instrument_instance.instrument
         if not instrument:
             raise InstrumentConnectionError("Could not create instrument instance")
         return instrument

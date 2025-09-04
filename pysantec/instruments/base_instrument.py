@@ -21,9 +21,10 @@ class BaseInstrument:
         self._status = None
         self.logger = get_logger(self._instrument.__class__.__name__)
 
-    def instrument(self, wrapper_type: InstrumentWrapper):
-        """Set the instrument wrapper type."""
-        if not wrapper_type:
+    @property
+    def instrument(self):
+        """Returns the instrument object."""
+        if not self._instrument:
             return None
         return self._instrument
 
