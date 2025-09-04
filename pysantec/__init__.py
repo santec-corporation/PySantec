@@ -20,7 +20,7 @@ except Exception as e:
 
 
 from .instruments.instrument_manager import InstrumentManager
-from .measurements.single_measurement_operation import SME
+from .measurements.sme_operation import SME
 
 
 __all__ = [
