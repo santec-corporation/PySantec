@@ -126,6 +126,18 @@ class TSLInstrument(BaseInstrument):
         self.logger.debug(f"Current step wavelength setting: {step_wavelength} nm.")
         return step_wavelength
 
+    def get_scan_cycles(self) -> int:
+        """Get the current number scan cycles."""
+        cycles = self._get_function("Get_Sweep_Cycle", int)
+        self.logger.debug(f"Current scan cycles setting: {cycles} nm.")
+        return cycles
+
+    def get_scan_delay(self) -> float:
+        """Get the current scan delay (in sec)."""
+        delay = self._get_function("Get_Sweep_Delay", float)
+        self.logger.debug(f"Current scan delay setting: {delay} nm.")
+        return delay
+
     # region Logging Data Related methods
     def get_logging_data_points(self) -> int:
         """Get the number of data points available in the logging data."""
@@ -327,6 +339,16 @@ class TSLInstrument(BaseInstrument):
             f"Scan parameters set successfully. TSL actual step: {actual_step} nm."
         )
         return actual_step
+
+    def set_scan_cycles(self, cycles: int):
+        """Set the number scan cycles."""
+        self.logger.info(f"Setting scan cycles to {cycles}.")
+        self._set_function("Set_Sweep_Cycle", cycles)
+
+    def set_scan_delay(self, delay: float):
+        """Set the delay time (in sec) between each scan cycle."""
+        self.logger.info(f"Setting scan delay to {delay} sec.")
+        self._set_function("Set_Sweep_Delay", delay)
 
     def start_scan(self):
         """Start the scan on the TSL instrument."""
