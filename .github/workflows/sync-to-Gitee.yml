@@ -14,4 +14,4 @@ jobs:
     uses: santec-corporation/gitee-sync/.github/workflows/sync-to-gitee.yml@master
     secrets: inherit
     with:
-      repo-name: ${{ GITHUB_REPOSITORY }}
+      repo-name: PySantec
