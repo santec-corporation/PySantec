@@ -8,7 +8,7 @@ on:
 jobs:
   call-reusable-sync:
     name: Call Gitee Sync Workflow
-    uses: santec-corporation/gitee-sync/.github/workflows/sync-to-gitee.yml@master
+    uses: santec-corporation/gitee-sync/.github/workflows/sync-to-gitee.yml@main
     secrets: inherit
     with:
       repo-name: PySantec
