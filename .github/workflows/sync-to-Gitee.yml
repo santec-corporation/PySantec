@@ -9,13 +9,9 @@ env:
   GITEE_REPOSITORY: santec-corporation-cn/PySantec
   
 jobs:
-  sync_to_gitee:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - run: |
-          remote_repo="https://${{ vars.GITEE_USERNAME }}:${{ secrets.GITEE_PAT }}@gitee.com/${{ env.GITEE_REPOSITORY }}.git"
-          git remote add gitee "${remote_repo}"
-          git push gitee -f
+  call-reusable-sync:
+    name: Call Gitee Sync Workflow
+    uses: santec-corporation/gitee-sync/.github/workflows/sync-to-gitee.yml@master
+    secrets: inherit
+    with:
+      repo-name: ${{ GITHUB_REPOSITORY }}
