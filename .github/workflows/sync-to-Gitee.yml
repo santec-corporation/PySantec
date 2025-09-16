@@ -1,18 +1,21 @@
 name: syncToGitee
+run-name: "[${{ github.workflow }}] - ${{ github.event.head_commit.message }}"
+
 on:
   push: 
   workflow_dispatch:
   
+env:
+  GITEE_REPOSITORY: santec-corporation-cn/PySantec
+  
 jobs:
-  repo-sync:
+  sync_to_gitee:
     runs-on: ubuntu-latest
     steps:
-      - name: Mirror the Github organization repos to Gitee.
-        uses: Yikun/hub-mirror-action@master
+      - uses: actions/checkout@v4
         with:
-          account_type: 'org'
-          src: 'github/santec-corporation'
-          dst: 'gitee/santec-corporation-cn'
-          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-          static_list: 'PySantec'
-          force_update: true
+          fetch-depth: 0
+      - run: |
+          remote_repo="https://${{ vars.GITEE_USERNAME }}:${{ secrets.GITEE_PAT }}@gitee.com/${{ env.GITEE_REPOSITORY }}.git"
+          git remote add gitee "${remote_repo}"
+          git push gitee -f
