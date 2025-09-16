@@ -1,0 +1,17 @@
+name: syncToGitee
+on:
+  push: 
+  workflow_dispatch:
+  
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror the Github organization repos to Gitee.
+        uses: Yikun/hub-mirror-action@master
+        with:
+          account_type: 'org'
+          src: 'github/santec-corporation'
+          dst: 'gitee/santec-corporation-cn'
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          force_update: true
