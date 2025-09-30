@@ -28,6 +28,12 @@ class BaseInstrument:
             return None
         return self._instrument
 
+    @property
+    def information(self):
+        if self.instrument:
+            return self.instrument.Information
+        raise Exception("Instrument is not connected.")
+
     def _check_restricted_method(self):
         """Check if the method is restricted to certain instrument types."""
         if not isinstance(self._instrument, (TSL, MPM)):
