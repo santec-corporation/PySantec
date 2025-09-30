@@ -14,7 +14,9 @@ from ..instruments import TSLInstrument, MPMInstrument, tsl_enums, mpm_enums
 
 
 class SME:
-    def __init__(self, tsl: TSLInstrument, mpm: MPMInstrument):
+    def __init__(self,
+                 tsl: TSLInstrument,
+                 mpm: MPMInstrument):
         self.logger = get_logger(self.__class__.__name__)
         self.laser = tsl
         self.power_meter = mpm
