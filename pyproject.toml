@@ -1,6 +1,6 @@
 [project]
 name = "pysantec"
-version = "0.2.1"
+version = "0.2.2"
 description = "Python Wrapper for the Santec IL and PDL Swept Test System"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
