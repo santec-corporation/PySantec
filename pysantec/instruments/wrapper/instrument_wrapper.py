@@ -9,6 +9,7 @@ from .enumerations.connection_enums import ConnectionType, GPIBType, Terminator
 from .exceptions import InstrumentConnectionError, InstrumentOperationError
 from .santec_communication_wrapper import MainCommunication
 from .santec_wrapper import DAQ
+from ...drivers import dll_manager
 
 
 class InstrumentWrapper:
@@ -30,6 +31,9 @@ class InstrumentWrapper:
         Returns:
             List of USB resource identifiers
         """
+        if not dll_manager.check_dll_exist(dll_manager.FTD2XX_DLL_PATH, ["ftd2xx.dll"]):
+            self.logger.info("FTDI drivers not installed. USB devices are unavailable.")
+            return []
         resources = list(self._main_comm.Get_USB_Resouce())
         self.logger.debug(f"USB resources found: {len(resources)}")
         return resources
