@@ -1,4 +1,4 @@
-name: Publish to PyPI
+name: Publish to Test PyPI
 
 on:
   push:
@@ -51,5 +51,6 @@ jobs:
         - name: Publish to PyPI
           uses: pypa/gh-action-pypi-publish@release/v1
           with:
+            repository_url: https://test.pypi.org/legacy/
             user: __token__
-            password: ${{ secrets.PYPI_API_TOKEN }}
+            password: ${{ secrets.TEST_PYPI_API_TOKEN }}
